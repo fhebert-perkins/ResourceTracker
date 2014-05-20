@@ -15,8 +15,8 @@ priority
 * = important
 ^ = nice but not required
 ```
-
-|:-:|--|
+| ! | task |
+| ------------- | ----------- |
 | ! | database handlers and queries |
 | * | css to make things pretty |
 | ! | import of data |
