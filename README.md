@@ -16,6 +16,7 @@ priority
 ^ = nice but not required
 ```
 
+|:-:|--|
 | ! | database handlers and queries |
 | * | css to make things pretty |
 | ! | import of data |
