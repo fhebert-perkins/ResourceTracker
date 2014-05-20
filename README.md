@@ -14,10 +14,13 @@ KEY
 * = high
 ^ = low
 ```
-| ! | task |
-| ------------- | ----------- |
-| ! | database handlers and queries |
-| * | css to make things pretty |
-| ! | import of data |
-| * | documentation |
-| ^ | data visualization (ie. how many are out, types of item) |
+| ! | task | language |
+| ------------- | ----------- | ----------- |
+| ! | database handlers and queries | sql & python |
+| ! | template for login page | html |
+| ! | template for root page | html |
+| ! | template for info page | htm|l 
+| * | css to make things pretty | css |
+| ! | import of data | sql |
+| * | documentation | english |
+| ^ | data visualization (ie. how many are out, types of item) | python, javascript, css, sql |
