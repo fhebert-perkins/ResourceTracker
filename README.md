@@ -8,12 +8,11 @@ For use with inventories with a number of different types of items
 todo
 ----
 
-priority
-
+KEY
 ```
-! = high
-* = important
-^ = nice but not required
+! = urgent
+* = high
+^ = low
 ```
 | ! | task |
 | ------------- | ----------- |
