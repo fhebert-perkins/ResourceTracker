@@ -3,11 +3,14 @@
   <body>
   <h1>
     Resource Tracker
-  </h1>
+  </h1> 
+  {% if error %}
+    <p> Incorrect login info </p>
+  {% endif %}
     <form action="/login" method="post">
-      <h3>
-        Login:
-      </h3>
+      Username: <input type='text' name='username'><br>
+      Password: <input type='password' name='password'><br>
+      <input type='submit' value='Login'>
     </form>
   </body>
 </html>
