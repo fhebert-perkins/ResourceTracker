@@ -1,24 +1,94 @@
 <!DOCTYPE html>
 <html>
-	<form action=/getinfo method=post>
+	<style type="text/css">
+	#top{
+		width: 650px;
+		border-bottom: solid 1px black;
+	}
+	#inputs{
+		width: 50;
+	}
+	div#top td{
+		text-align: right;
+		padding-left: 18px;
+	}
+	#bottom td{
+		text-align: right;
+	}
+	#history{
+		border: solid 2px black;
+		height: 100px;
+		width: 650px;
+		text-align: center;
+	}
+	#history td#name{
+		border-right: solid 1px black;
+		height: 15px;
+		width: 165px;
+		text-align: center;
+	}
+	#history td#serial{
+		border-right: solid 1px black;
+		height: 15px;
+		width: 165px;
+		text-align: center;
+	}
+	#history td#date{
+		border-right: solid 1px black;
+		height: 15px;
+		width: 165px;
+		text-align: center;
+	}
+	#history td#action{
+		height: 15px;
+		width: 165px;
+		text-align: center;
+	}
+	tr#header{
+		border: solid 1px black;
+	}
+	</style>
+	<form action='/getinfo' 'method=post'>
+		<div id='top'>
+			<table>
+				<tr>
+					<td>s/n:<input type='text' name='serialnumber'></td>
+					<td>First Name: <input type='text' name='firstname'><td>
+				</tr>
+				<tr>
+					<td>case#: <input type='text' name='casenum'></td>
+					<td>Last Name: <input type='text' name='lastname'></td>
+					<td>
+					<td><input type='submit' name='search' value='search'></td>
+				</tr>
+			</table>
+		</div>
+	</form>
+	<form action='/getinfo' method='post' id='bottom'>
 		<table>
 			<tr>
-				<td>s/n:<input type='text' name='serialnumber'></td>
-				<td>First Name: <select name='firstname'>
-				{% for option in firstnameoption %}
-					<option value="{{ option }}">{{ option }}</option>
-				{% endfor %}
-				</select>
 				<td>
-			</tr>
-			<tr>
-				<td>case#: <input type='text' name='casenum'></td>
-				<td>Last Name: <select name='lastname'>
-				{% for option in lastnameoption %}
-					<option value="{{ option }}">{{ option }}</option>
-				{% endfor %}
-				</select>
-				<td>
+					<table>
+						<tr>
+							<td>Login Name:<input type='text' name='loginName'></td>
+							<td>First Name:<input type='text' name='firstName'></td>
+						</tr>
+						<tr>
+							<td>Grade: <select><option value='9'>9</option><option value='10'>10</option><option value='11'>11</option><option value='12'>12</option><option value='staffulty'>staffulty</option></select></td>
+							<td>Last Name:<input type='text' name='firstName'></td>
+						</tr>
+					</table>
+				</td>
+				<td><input type='submit' name='addnew' value='add trans' style='height: 50px;'></td>
 			</tr>
 		</table>
+	</form>
+	<div id='history'>
+		<table>
+			<tr id='header'><td>Name</td><td>Serial #</td><td>Date</td><td>Action</td></tr>
+			{% for entry in history %}
+				<tr><td id='name'>{ entry.name }</td><td id='serial'>{ entry.serialnumber }</td><td id='date'>{ entry.date }</td><td id='action'>{ entry.action}</td></tr>
+			{% endfor %}
+		</table>
+	</div>
 </html>
