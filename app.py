@@ -1,6 +1,5 @@
 from flask import Flask, request, redirect, url_for, send_from_directory, session, render_template, Response
 import MySQLdb
-
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.update(dict(
@@ -31,7 +30,6 @@ def getinfo():
 			return render_template('getinfo.html', firstnameoption=firstnames, lastnameoption=lastnames, )
 		return render_template('getinfo.html')
 	return redirect(url_for('login'))
-
 if __name__ == '__main__':
 	app.secret_key = 'as;ldfjkas;lfj2i1212'
 	app.run(debug=True, host='0.0.0.0')
