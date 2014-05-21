@@ -28,7 +28,6 @@ def get_history(id):
 		toreturn.append(data)
 		toreturn.append(type)
 		toreturn.append(data)
-
 		return toreturn
 	else:
 		return False
@@ -59,10 +58,11 @@ def login():
 @app.route('/getinfo', methods=['GET','POST'])
 def getinfo:
 	if session['logged_in']:
+		firstnames 
 		if request.method == 'post':
 			#get the history of the computer
 			info = {}
-			return render_template('getinfo.html', info=info)
+			return render_template('getinfo.html', firstnameoption=firstnames, lastnameoption=lastnames, )
 		return render_template('getinfo.html')
 	return redirect(url_for('login'))
 

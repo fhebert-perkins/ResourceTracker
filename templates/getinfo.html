@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<form action=/getinfo method=post>
+		<table>
+			<tr>
+				<td>s/n:<input type='text' name='serialnumber'></td>
+				<td>First Name: <select name='firstname'>
+				{% for option in firstnameoption %}
+					<option value="{{ option }}">{{ option }}</option>
+				{% endfor %}
+				</select>
+				<td>
+			</tr>
+			<tr>
+				<td>case#: <input type='text' name='casenum'></td>
+				<td>Last Name: <select name='lastname'>
+				{% for option in lastnameoption %}
+					<option value="{{ option }}">{{ option }}</option>
+				{% endfor %}
+				</select>
+				<td>
+			</tr>
+		</table>
+</html>
