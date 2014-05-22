@@ -1,15 +1,15 @@
 <!-- Login Template-->
 <html>
-  <body>
-  <h1>
+  <body bgcolor='#59BCFF'>
+  <h1 align='center'><u>
     Resource Tracker
-  </h1> 
+  </u></h1> 
   {% if error %}
     <p> Incorrect login info </p>
   {% endif %}
-    <form action="/login" method="post">
-      Username: <input type='text' name='username'><br>
-      Password: <input type='password' name='password'><br>
+    <form action="/login" method="post" align='center'>
+      Username: <input type='text' name='username' autofocus required><br>
+      Password: <input type='password' name='password' required><br>
       <input type='submit' value='Login'>
     </form>
   </body>
