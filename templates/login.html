@@ -1,16 +1,25 @@
 <!-- Login Template-->
 <html>
-  <body bgcolor='#59BCFF'>
-  <h1 align='center'><u>
-    Resource Tracker
-  </u></h1> 
-  {% if error %}
-    <p> Incorrect login info </p>
-  {% endif %}
-    <form action="/login" method="post" align='center'>
-      Username: <input type='text' name='username' autofocus required><br>
-      Password: <input type='password' name='password' required><br>
-      <input type='submit' value='Login'>
-    </form>
-  </body>
+<body bgcolor='#59BCFF'>
+<h1 align='center'><u>
+        Resource Tracker
+</u></h1>
+<br><br><br><br><br><br>
+<form action="?login" method="post" id='LoginForm'>
+<div id='Login Box' style='background-color:#FFD700; 
+
+height:200px;width:250px;>
+	<div id='Username'><br>Username: <input type='text' 
+
+name='Username'autofocus required></div>
+	<div id='Password'><br>Password: <input type="password" 
+
+name="Password" required></div>
+	<div id='Login format'style='position: absolute; 
+
+left:103px;top:315px;'>
+<button type='submit' value='Submit' form='LoginForm'>Login</button>  
+</div> 
+</form>
+</body>
 </html>
