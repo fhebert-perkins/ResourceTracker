@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 	<style type="text/css">
+	body{
+		font-family: monospace;
+	}
 	#top{
 		width: 650px;
 		border-bottom: solid 1px black;
+		padding-left: 30px;
 	}
 	#inputs{
 		width: 50;
 	}
 	div#top td{
 		text-align: right;
-		padding-left: 18px;
 	}
 	#bottom td{
 		text-align: right;
@@ -45,22 +48,28 @@
 		width: 165px;
 		text-align: center;
 	}
-	tr#header{
-		border: solid 1px black;
+	#history tr{
+		width: 625px;
 	}
 	</style>
 	<form action='/getinfo' 'method=post'>
 		<div id='top'>
 			<table>
 				<tr>
-					<td>s/n:<input type='text' name='serialnumber'></td>
-					<td>First Name: <input type='text' name='firstname'><td>
-				</tr>
-				<tr>
-					<td>case#: <input type='text' name='casenum'></td>
-					<td>Last Name: <input type='text' name='lastname'></td>
 					<td>
-					<td><input type='submit' name='search' value='search'></td>
+						<table>
+							<tr>
+								<td>s/n:<input type='text' name='SerialNumber'></td>
+								<td>Login Name: <input type='text' name='LoginName'><td>
+							</tr>
+							<tr>
+								<td>case#: <input type='text' name='Casenum'></td>
+								<td>Last Name: <input type='date' name='Date'></td>
+								
+							</tr>
+						</table>
+					</td>
+					<td><input style='height: 50px'type='submit' name='btn' value='search'></td>
 				</tr>
 			</table>
 		</div>
@@ -71,16 +80,22 @@
 				<td>
 					<table>
 						<tr>
-							<td>Login Name:<input type='text' name='loginName'></td>
-							<td>First Name:<input type='text' name='firstName'></td>
+							<td>Login Name:<input type='text' name='LoginName'></td>
+							<td>s/n:<input type='text' name='SerialNumber'></td>
 						</tr>
 						<tr>
-							<td>Grade: <select><option value='9'>9</option><option value='10'>10</option><option value='11'>11</option><option value='12'>12</option><option value='staffulty'>staffulty</option></select></td>
-							<td>Last Name:<input type='text' name='firstName'></td>
+							<td>Grade: <select name='grade'><option value='9'>9</option><option value='10'>10</option><option value='11'>11</option><option value='12'>12</option><option value='staffulty'>staffulty</option></select></td>
+							<td>
+								<select name='transaction'>
+									{% for key in transactions %}
+										<option value='{{ key.value }}'>{{ key.description }}</option>
+									{% endfor %}
+								</select>
+							</td>
 						</tr>
 					</table>
 				</td>
-				<td><input type='submit' name='addnew' value='add transaction' style='height: 50px;'></td>
+				<td><input type='submit' name='btn' value='add transaction' style='height: 50px;'></td>
 			</tr>
 		</table>
 	</form>
