@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, url_for, send_from_directory, session, render_template, Response
 import MySQLdb
 db = MySQLdb.connect(host="localhost", # your host, usually localhost
-                      user="root", # your username
+                      user="tracker", # your username
                        passwd="password", # your password
                        db="Tracker")
 app = Flask(__name__)
@@ -19,33 +19,34 @@ login_info = {'temptemp':'temptemppassword', 'admin':'password'}
 @app.route('/')
 def root():
 	return redirect(url_for('getinfo'))
-@app.route('/getinfo', methods=['GET','POST'])
-def getinfo():
+@app.route('/history', methods=['GET','POST'])
+def history():
 	if session.get('logged_in'):
-		transactions = cur.execute('SELECT * FROM transtype')
-		if request.method == 'post':
-			if request.form['btn'] == 'search':
-				query = []
-				form = request.form
-				search = {'SerialNumber': False, 'CaseNumber': False, 'FirstName': False, 'LastName': False}
-				for key in form:
-					if form[key] != None:
-						search[key] = True
-				for key in search:
-					if key:
-						query.append(key+'='+form[key])
-				if len(query) > 1:
-					querystring = 'SELECT * FROM transactions WHERE '+query[0]
-				else:
-					querystring = 'SELECT * FROM * WHERE '
-					querystring += query[0]
-					for i in range(len(1, query)):
-						querystring+=' AND '+query[i]
-				history = cur.execute(querystring)
-				return render_template('getinfo.html', transactions=transactions, history=history)
-			else:
-				return render_template('getinfo.html')
+		if request.method == 'POST':
+			pass
 		return render_template('getinfo.html')
+	return redirect(url_for('login'))
+@app.route('/addtrans', methods=['POST','GET'])
+def addtrans():
+	if session.get('logged_in'):
+		cur.execute('SELECT * FROM transtype')
+		types = cur.fetchall()
+		cur.execute('SELECT * FROM resources')
+		resources = cur.fetchall()
+		if request.method == 'POST':
+			form = request.form
+			loginName = form['loginName']
+			serialNumber = form['serialNumber']
+			resource = form['resourceType']
+			cur.execute('SELECT resource_name FROM resources WHERE resource_id='+resource)
+			resource = ''.join(cur.fetchall()[0])
+			transType = form['transtype']
+			cur.execute('SELECT TransTypeDesc FROM transtype WHERE TransOrder='+transType)
+			transType = ''.join(cur.fetchall()[0])
+			note = form['note']
+			cur.execute('INSERT INTO transactions (`LoginName`, `SerialNumber`, `LaptopModel`, `CaseNumber`, `TransType`, `Notes`) VALUES ('+loginName+','+serialNumber+','+resource+','+transType+','+note+')')
+			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
+		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
 @app.route('/login', methods=['POST','GET'])
 def login():

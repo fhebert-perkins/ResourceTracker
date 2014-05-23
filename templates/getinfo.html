@@ -52,7 +52,7 @@
 		width: 625px;
 	}
 	</style>
-	<form action='/getinfo' 'method=post'>
+	<form action='/getinfo' method='post'>
 		<div id='top'>
 			<table>
 				<tr>
@@ -84,11 +84,11 @@
 							<td>s/n:<input type='text' name='SerialNumber'></td>
 						</tr>
 						<tr>
-							<td>Grade: <select name='grade'><option value='9'>9</option><option value='10'>10</option><option value='11'>11</option><option value='12'>12</option><option value='staffulty'>staffulty</option></select></td>
+							<td>Grade: <select name='grade'><option value='9'>9</option><option value='10'>10</option><option value='11'>11</option><option value='12'>12</option><option value='staffulty'>staffulty</option><option value='None'>None</option></select></td>
 							<td>
 								<select name='transaction'>
-									{% for key in transactions %}
-										<option value='{{ key.value }}'>{{ key.description }}</option>
+									{% for row in transactions %}
+										<option value='{{ row[0] }}'>{{ row[1] }}</option>
 									{% endfor %}
 								</select>
 							</td>
