@@ -1,10 +1,12 @@
 from flask import Flask, request, redirect, url_for, send_from_directory, session, render_template, Response
+from flask.bcrypt import Bcrypt
 import MySQLdb
 db = MySQLdb.connect(host="localhost", # your host, usually localhost
                       user="tracker", # your username
                        passwd="password", # your password
                        db="Tracker")
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
 	USERNAME='admin',
@@ -20,12 +22,15 @@ login_info = {'temptemp':'temptemppassword', 'admin':'password'}
 @app.route('/')
 def root():
 	return redirect(url_for('addtrans'))
+@app.route('/search')
+def search():
+	return render_template('search.html')
 @app.route('/history', methods=['GET','POST'])
 def history():
 	if session.get('logged_in'):
 		if request.method == 'POST':
 			pass
-		return render_template('getinfo.html')
+		return render_template('history.html')
 	return redirect(url_for('login'))
 @app.route('/addtrans', methods=['POST','GET'])
 def addtrans():
@@ -52,14 +57,13 @@ def addtrans():
 def login():
 	error = None
 	if request.method == 'POST':
-		if request.form['username'] in login_info:
-			if request.form['password'] == login_info[request.form['username']]:
-				session['logged_in'] = True
-				return redirect(url_for('addtrans'))
-			else:
-				error = 'Invalid Password'
+		cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['Username']))
+		hashed_password = cur.fetchall()[0]
+		if Bcrypt.check_password_hash(hashed_password, request.form['Password']):
+			session['logged_in'] = True
+			return redirect(url_for('addtrans'))
 		else:
-			error = 'Invalid Username'	
+			return render_template('login.html')
 	return render_template('login.html', error=error)
 @app.route('/logout')
 def logout():
