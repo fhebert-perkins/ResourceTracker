@@ -3,7 +3,7 @@ import MySQLdb
 db = MySQLdb.connect(host="localhost", # your host, usually localhost
                       user="tracker", # your username
                        passwd="password", # your password
-                       db="Tracker")
+                       db="tracker")
 app = Flask(__name__)
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
@@ -44,7 +44,7 @@ def addtrans():
 			cur.execute('SELECT TransTypeDesc FROM transtype WHERE TransOrder='+transType)
 			transType = ''.join(cur.fetchall()[0])
 			note = form['note']
-			cur.execute('INSERT INTO transactions (`LoginName`, `SerialNumber`, `LaptopModel`, `CaseNumber`, `TransType`, `Notes`) VALUES ('+loginName+','+serialNumber+','+resource+','+transType+','+note+')')
+			cur.execute('INSERT INTO transactions (`LoginName`, `SerialNumber`, `LaptopModel`, `CaseNumber`, `TransType`, `Notes`) VALUES ('+loginName+','+serialNumber+','+resource+','+transType+', Null,'+note+')')
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
