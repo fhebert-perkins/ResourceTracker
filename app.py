@@ -15,7 +15,7 @@ app.config.update(dict(
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 ))
 cur = db.cursor()
-
+cur.execute('SET autocommit=1;')
 login_info = {'temptemp':'temptemppassword', 'admin':'password'}
 @app.route('/')
 def root():
@@ -45,7 +45,6 @@ def addtrans():
 			transType = ''.join(cur.fetchall()[0])
 			note = request.form['note']
 			cur.execute('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
-			cur.execute('')
 			cur.close()
 			db.close()
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
