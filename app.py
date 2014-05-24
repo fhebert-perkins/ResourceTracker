@@ -30,7 +30,7 @@ def history():
 @app.route('/addtrans', methods=['POST','GET'])
 def addtrans():
 	if session.get('logged_in'):
-		cur.execute('SELECT * FROM Transtype')
+		cur.execute('SELECT * FROM TransType')
 		types = cur.fetchall()
 		cur.execute('SELECT * FROM Resources')
 		resources = cur.fetchall()
