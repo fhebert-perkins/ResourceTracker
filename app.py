@@ -39,7 +39,7 @@ def addtrans():
 			loginName = form['loginName']
 			serialNumber = form['serialNumber']
 			resource = form['resourceType']
-			cur.execute('SELECT resource_name FROM Resources WHERE resource_id='+resource)
+			cur.execute('SELECT Name FROM Resources WHERE RID='+resource)
 			resource = ''.join(cur.fetchall()[0])
 			transType = form['transtype']
 			cur.execute('SELECT TransTypeDesc FROM Transtype WHERE TransOrder='+transType)
