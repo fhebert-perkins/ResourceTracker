@@ -45,8 +45,6 @@ def addtrans():
 			transType = ''.join(cur.fetchall()[0])
 			note = request.form['note']
 			cur.execute('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
-			cur.close()
-			db.close()
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
