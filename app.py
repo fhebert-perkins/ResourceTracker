@@ -41,7 +41,7 @@ def addtrans():
 			cur.execute('SELECT Name FROM Resources WHERE RID='+resource)
 			resource = ''.join(cur.fetchall()[0])
 			transType = request.form['transtype']
-			cur.execute('SELECT TransTypeDesc FROM Transtype WHERE TransOrder='+transType)
+			cur.execute('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)
 			transType = ''.join(cur.fetchall()[0])
 			note = request.form['note']
 			cur.execute('INSERT INTO Transactions (`LoginName`, `SerialNumber`, `LaptopModel`, `CaseNumber`, `TransType`, `Notes`) VALUES ('+loginName+','+serialNumber+','+resource+','+transType+', Null,'+note+')')
