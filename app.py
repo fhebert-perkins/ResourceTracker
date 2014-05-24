@@ -65,6 +65,10 @@ def login():
 def logout():
 	session.pop('logged_in', None)
 	return redirect(url_for('login'))
+@app.teardown_appcontext
+def teardown():
+	cur.close()
+	db.close()
 if __name__ == '__main__':
 	app.secret_key = app.config['app_secretKey']
 	app.run(debug=app.config['app_debug'], host='0.0.0.0', port=app.config['app_port'])
