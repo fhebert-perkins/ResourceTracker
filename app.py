@@ -1,10 +1,7 @@
 from flask import Flask, request, redirect, url_for, send_from_directory, session, render_template, Response
 from flask.bcrypt import Bcrypt
 import MySQLdb
-db = MySQLdb.connect(host="localhost", # your host, usually localhost
-                      user="tracker", # your username
-                       passwd="password", # your password
-                       db="Tracker")
+db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker")
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 #app.config.from_pyfile('config.py')
@@ -24,12 +21,14 @@ def root():
 	return redirect(url_for('addtrans'))
 @app.route('/search')
 def search():
-	return render_template('search.html')
+	if session.get('logged_in'):
+		return render_template('search.html')
+	return redirect(url_for('login'))
 @app.route('/history', methods=['GET','POST'])
 def history():
 	if session.get('logged_in'):
 		if request.method == 'POST':
-			pass
+			
 		return render_template('history.html')
 	return redirect(url_for('login'))
 @app.route('/addtrans', methods=['POST','GET'])
@@ -67,7 +66,9 @@ def login():
 	return render_template('login.html', error=error)
 @app.route('/logout')
 def logout():
-	session.pop('logged_in', None)
+	if session.get('logged_in'):
+		session.pop('logged_in', None)
+		return redirect(url_for('login'))
 	return redirect(url_for('login'))
 @app.teardown_appcontext
 def teardown():
