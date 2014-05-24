@@ -18,7 +18,7 @@ cur = db.cursor()
 login_info = {'temptemp':'temptemppassword', 'admin':'password'}
 @app.route('/')
 def root():
-	return redirect(url_for('getinfo'))
+	return redirect(url_for('addtrans'))
 @app.route('/history', methods=['GET','POST'])
 def history():
 	if session.get('logged_in'):
