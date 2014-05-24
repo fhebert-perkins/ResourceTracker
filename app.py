@@ -30,22 +30,22 @@ def history():
 @app.route('/addtrans', methods=['POST','GET'])
 def addtrans():
 	if session.get('logged_in'):
-		cur.execute('SELECT * FROM transtype')
+		cur.execute('SELECT * FROM Transtype')
 		types = cur.fetchall()
-		cur.execute('SELECT * FROM resources')
+		cur.execute('SELECT * FROM Resources')
 		resources = cur.fetchall()
 		if request.method == 'POST':
 			form = request.form
 			loginName = form['loginName']
 			serialNumber = form['serialNumber']
 			resource = form['resourceType']
-			cur.execute('SELECT resource_name FROM resources WHERE resource_id='+resource)
+			cur.execute('SELECT resource_name FROM Resources WHERE resource_id='+resource)
 			resource = ''.join(cur.fetchall()[0])
 			transType = form['transtype']
-			cur.execute('SELECT TransTypeDesc FROM transtype WHERE TransOrder='+transType)
+			cur.execute('SELECT TransTypeDesc FROM Transtype WHERE TransOrder='+transType)
 			transType = ''.join(cur.fetchall()[0])
 			note = form['note']
-			cur.execute('INSERT INTO transactions (`LoginName`, `SerialNumber`, `LaptopModel`, `CaseNumber`, `TransType`, `Notes`) VALUES ('+loginName+','+serialNumber+','+resource+','+transType+', Null,'+note+')')
+			cur.execute('INSERT INTO Transactions (`LoginName`, `SerialNumber`, `LaptopModel`, `CaseNumber`, `TransType`, `Notes`) VALUES ('+loginName+','+serialNumber+','+resource+','+transType+', Null,'+note+')')
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
