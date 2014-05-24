@@ -3,7 +3,7 @@ import MySQLdb
 db = MySQLdb.connect(host="localhost", # your host, usually localhost
                       user="tracker", # your username
                        passwd="password", # your password
-                       db="tracker")
+                       db="Tracker")
 app = Flask(__name__)
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
