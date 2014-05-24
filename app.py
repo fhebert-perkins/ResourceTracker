@@ -56,7 +56,7 @@ def login():
 		if request.form['username'] in login_info:
 			if request.form['password'] == login_info[request.form['username']]:
 				session['logged_in'] = True
-				return redirect(url_for('getinfo'))
+				return redirect(url_for('addtrans'))
 			else:
 				error = 'Invalid Password'
 		else:
