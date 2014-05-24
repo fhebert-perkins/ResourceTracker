@@ -11,7 +11,8 @@ app.config.update(dict(
 	PASSWORD='default',
 	app_secretKey='aslkdfjalsdjkfalskdjfl3jlk1j2l3kj',
 	app_debug=True,
-	app_port=5000
+	app_port=5000,
+	SERVER_NAME='bayschoolsf.org'
 ))
 cur = db.cursor()
 
