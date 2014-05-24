@@ -35,16 +35,15 @@ def addtrans():
 		cur.execute('SELECT * FROM Resources')
 		resources = cur.fetchall()
 		if request.method == 'POST':
-			form = request.form
-			loginName = form['loginName']
-			serialNumber = form['serialNumber']
-			resource = form['resourceType']
+			loginName = request.form['loginName']
+			serialNumber = request.form['serialNumber']
+			resource = request.form['resourceType']
 			cur.execute('SELECT Name FROM Resources WHERE RID='+resource)
 			resource = ''.join(cur.fetchall()[0])
-			transType = form['transtype']
+			transType = request.form['transtype']
 			cur.execute('SELECT TransTypeDesc FROM Transtype WHERE TransOrder='+transType)
 			transType = ''.join(cur.fetchall()[0])
-			note = form['note']
+			note = request.form['note']
 			cur.execute('INSERT INTO Transactions (`LoginName`, `SerialNumber`, `LaptopModel`, `CaseNumber`, `TransType`, `Notes`) VALUES ('+loginName+','+serialNumber+','+resource+','+transType+', Null,'+note+')')
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
