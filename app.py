@@ -12,7 +12,7 @@ app.config.update(dict(
 	app_secretKey='aslkdfjalsdjkfalskdjfl3jlk1j2l3kj',
 	app_debug=True,
 	app_port=5000,
-	SERVER_NAME='bayschoolsf.org'
+	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 ))
 cur = db.cursor()
 
