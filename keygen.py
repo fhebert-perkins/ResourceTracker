@@ -1,2 +1,3 @@
 import os
-print os.urandom(64)
+def key():
+	return os.urandom(64)

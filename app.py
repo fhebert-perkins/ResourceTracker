@@ -1,14 +1,15 @@
 from flask import Flask, request, redirect, url_for, send_from_directory, session, render_template, Response
-from flask.bcrypt import Bcrypt
 import MySQLdb
+import keygen
+import hashlib
+m = hashlib.md5()
 db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker")
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
 	USERNAME='admin',
 	PASSWORD='default',
-	app_secretKey='aslkdfjalsdjkfalskdjfl3jlk1j2l3kj',
+	app_secretKey=keygen.key(),
 	app_debug=True,
 	app_port=5000,
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
@@ -16,6 +17,7 @@ app.config.update(dict(
 cur = db.cursor()
 cur.execute('SET autocommit=1;')
 login_info = {'temptemp':'temptemppassword', 'admin':'password'}
+
 @app.route('/')
 def root():
 	return redirect(url_for('addtrans'))
@@ -24,13 +26,32 @@ def search():
 	if session.get('logged_in'):
 		return render_template('search.html')
 	return redirect(url_for('login'))
+
 @app.route('/history', methods=['GET','POST'])
 def history():
 	if session.get('logged_in'):
 		if request.method == 'POST':
-			
-		return render_template('history.html')
+			if request.form['serialNumber'] != '':
+				cur.execute('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber'])
+				data = cur.fetchall()
+				return render_template('history.html', data=data)
+			elif request.form['loginName'] != '':
+				cur.execute('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
+				data = cur.fetchall()
+				return render_template('history.html', data=data)
+			elif request.form['resource'] != '':
+				cur.execute('SELECT * FROM Transactions WHERE LaptopModel=%s', request.form['resource'])
+				data = cur.fetchall()
+				return render_template('history.html', data=data)
+			elif request.form['transactionType'] != '':
+				cur.execute('SELECT * FROM Transactions WHERE TransType=%s', request.form['transactionType'])
+				data = cur.fetchall()
+				return render_template('history.html', data=data)
+			else:
+				return render_template('history.html')
+		return redirect(url_for('serach'))
 	return redirect(url_for('login'))
+
 @app.route('/addtrans', methods=['POST','GET'])
 def addtrans():
 	if session.get('logged_in'):
@@ -58,7 +79,7 @@ def login():
 	if request.method == 'POST':
 		cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['Username']))
 		hashed_password = cur.fetchall()[0]
-		if Bcrypt.check_password_hash(hashed_password, request.form['Password']):
+		if hashed_password == hashlib.sha224(request.form['Password']).hexdigest():
 			session['logged_in'] = True
 			return redirect(url_for('addtrans'))
 		else:
@@ -69,6 +90,15 @@ def logout():
 	if session.get('logged_in'):
 		session.pop('logged_in', None)
 		return redirect(url_for('login'))
+	return redirect(url_for('login'))
+@app.route('/newuser', methods=['GET', 'POST'])
+def newuser():
+	if session.get('logged_in'):
+		if request.method == 'post':
+			password = hashlib.sha224(request.form['password']).hexdigest()
+			cur.execute('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
+			return render_template('adduser', updated=True)
+		return render_template('adduser.html')
 	return redirect(url_for('login'))
 @app.teardown_appcontext
 def teardown():
