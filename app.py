@@ -1,10 +1,11 @@
-from flask import Flask, request, redirect, url_for, send_from_directory, session, render_template, Response
-import MySQLdb
-import keygen
-import hashlib
-m = hashlib.md5()
-db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker")
-app = Flask(__name__)
+from flask import Flask, request, redirect, url_for, send_from_directory, session, render_template, Response # Web library requirements
+import MySQLdb # mysql library
+import keygen # generate random 64 bits of entropy for the application secret key
+import hashlib # hash for secure passwords. No salt
+
+db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker") # initiates mysql connection
+app = Flask(__name__) # initiates flask webap
+
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
 	USERNAME='admin',
@@ -13,28 +14,29 @@ app.config.update(dict(
 	app_debug=True,
 	app_port=5000,
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
-))
-cur = db.cursor()
-cur.execute('SET autocommit=1;')
-login_info = {'temptemp':'temptemppassword', 'admin':'password'}
+)) # application configuration
+
+cur = db.cursor() # initiates database cursor
+cur.execute('SET autocommit=1;') # sets the database to autocommit changes
+login_info = {'temptemp':'temptemppassword', 'admin':'password'} # old user : password format 
 
 @app.route('/')
 def root():
-	return redirect(url_for('addtrans'))
+	return redirect(url_for('addtrans')) # if / is served, redirects webbrowser to the add transaction page
 @app.route('/search')
 def search():
-	if session.get('logged_in'):
-		return render_template('search.html')
-	return redirect(url_for('login'))
+	if session.get('logged_in'): # checks if session is logged in, if so passes search form
+		return render_template('search.html') # serves search form
+	return redirect(url_for('login')) # redirects to login if user is not logged in
 
-@app.route('/history', methods=['GET','POST'])
+@app.route('/history', methods=['GET','POST']) # request methods allowed Post and Get
 def history():
-	if session.get('logged_in'):
-		if request.method == 'POST':
-			if request.form['serialNumber'] != '':
-				cur.execute('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber'])
+	if session.get('logged_in'): # checks if session is logged in if so passes to authorized only values
+		if request.method == 'POST': # if the request method is post
+			if request.form['serialNumber'] != '': # if serial number is present, use that to 
+				cur.execute('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber']) 
 				data = cur.fetchall()
-				return render_template('history.html', data=data)
+				return render_template('history.html', data=data) # renders template with rows
 			elif request.form['loginName'] != '':
 				cur.execute('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
 				data = cur.fetchall()
@@ -52,9 +54,9 @@ def history():
 		return redirect(url_for('serach'))
 	return redirect(url_for('login'))
 
-@app.route('/addtrans', methods=['POST','GET'])
+@app.route('/addtrans', methods=['POST','GET']) # adds transactions to the Transactions database
 def addtrans():
-	if session.get('logged_in'):
+	if session.get('logged_in'): # checks if logged in 
 		cur.execute('SELECT * FROM TransType')
 		types = cur.fetchall()
 		cur.execute('SELECT * FROM Resources')
