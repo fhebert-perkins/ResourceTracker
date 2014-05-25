@@ -110,10 +110,15 @@ def newuser():
 	return redirect(url_for('login'))
 @app.route('/'+adminpanelURI, methods=['GET', 'POST'])
 def adminpanel():
-	if session.get('logged_in')
+	if session.get('logged_in'):
 		if request.method == 'post':
-			
-		return render_template('adminpanel.html')
+			if request.form['btn'] == 'add resource':
+				cur.execute('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['reourceName'], request.form['resourceType']))
+				return render_template('adminpanel.html', adminURL=adminpanelURI)
+			if request.form['btn'] == 'add transaction':
+				cur.execute('INSERT INTO Transactions (Transaction) VALUES (%s)', (request.form['transactionName']))
+				return render_template('adminpanel.html', adminURL=adminpanelURI)
+		return render_template('adminpanel.html', adminURL=adminpanelURI)
 	return redirect(url_for('login'))
 @app.teardown_appcontext
 def teardown():
