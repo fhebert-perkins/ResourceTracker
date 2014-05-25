@@ -2,10 +2,11 @@ from flask import Flask, request, redirect, url_for, send_from_directory, sessio
 import MySQLdb # mysql library
 import keygen # generate random 64 bits of entropy for the application secret key
 import hashlib # hash for secure passwords. No salt
+import random
 
 db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker") # initiates mysql connection
 app = Flask(__name__) # initiates flask webap
-
+adminpanelURI = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)) # url for the admin panel
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
 	USERNAME='admin',
@@ -13,7 +14,9 @@ app.config.update(dict(
 	app_secretKey=keygen.key(),
 	app_debug=True,
 	app_port=5000,
+	adminPassword='d63dc919e201d7bc4c825630d2cf25fdc93d4b2f0d46706d29038d01',
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
+
 )) # application configuration
 
 cur = db.cursor() # initiates database cursor
@@ -79,6 +82,9 @@ def addtrans():
 def login():
 	error = None
 	if request.method == 'POST':
+		if request.form['username'] == 'admin':
+			if hashlib.sha224(request.form['password']).hexdigest() == app.config['adminPassword']:
+				return redirect(url_for('adminpanel'))
 		cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['Username']))
 		hashed_password = cur.fetchall()[0]
 		if hashed_password == hashlib.sha224(request.form['Password']).hexdigest():
@@ -101,6 +107,13 @@ def newuser():
 			cur.execute('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
 			return render_template('adduser', updated=True)
 		return render_template('adduser.html')
+	return redirect(url_for('login'))
+@app.route('/'+adminpanelURI, methods=['GET', 'POST'])
+def adminpanel():
+	if session.get('logged_in')
+		if request.method == 'post':
+			
+		return render_template('adminpanel.html')
 	return redirect(url_for('login'))
 @app.teardown_appcontext
 def teardown():
