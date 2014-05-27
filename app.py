@@ -1,12 +1,12 @@
-from flask import Flask, request, redirect, url_for, send_from_directory, session, render_template, Response # Web library requirements
-import MySQLdb # mysql library
-import keygen # generate random 64 bits of entropy for the application secret key
-import hashlib # hash for secure passwords. No salt
-import random
+from flask import Flask, request, redirect, url_for, session, render_templateh # Web library requirements
+import MySQLdb  # mysql library
+import keygen  # generate random 64 bits of entropy for the application secret key
+import hashlib  # hash for secure passwords. No salt
+import random  # 
 
 db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker") # initiates mysql connection
 app = Flask(__name__) # initiates flask webap
-adminpanelURI = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)) # url for the admin panel
+adminpanelURI = 'adminpanel' #''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)) # url for the admin panel
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
 	USERNAME='admin',
@@ -21,7 +21,6 @@ app.config.update(dict(
 
 cur = db.cursor() # initiates database cursor
 cur.execute('SET autocommit=1;') # sets the database to autocommit changes
-login_info = {'temptemp':'temptemppassword', 'admin':'password'} # old user : password format 
 
 @app.route('/')
 def root():
@@ -110,7 +109,7 @@ def newuser():
 	return redirect(url_for('login'))
 @app.route('/'+adminpanelURI, methods=['GET', 'POST'])
 def adminpanel():
-	if session.get('logged_in'):
+	if session.get('logged_in')
 		if request.method == 'post':
 			if request.form['btn'] == 'add resource':
 				cur.execute('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['reourceName'], request.form['resourceType']))
