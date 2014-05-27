@@ -16,7 +16,7 @@ app.config.update(dict(
 	app_debug=True,
 	app_port=5000,
 	app_hashKey='derpderpderp',
-	adminPassword=generate_password_hash('password')
+	adminPassword=generate_password_hash('password'),
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 
 )) # application configuration
