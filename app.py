@@ -15,9 +15,8 @@ app.config.update(dict(
 	app_debug=True,
 	app_port=5000,
 	app_hashKey='derpderpderp',
-	adminPassword=generate_password_hash('password'),
+	adminPassword='password',
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
-
 )) # application configuration
 
 def reconnect():
@@ -130,8 +129,8 @@ def login():
 	error = None
 	if request.method == 'POST':
 		if request.form['username'] == 'admin':
-			if check_password_hash(app.config['adminPassword'], request.form['password']):
-				return redirect(url_for('adminpanel'))
+			if check_password_hash(get_hashed_password(app.config['adminPassword']), request.form['password']):
+				return redirect(url_for('admin'))
 			return render_template('login.html', error='Wrong Username/password')
 		try:
 			cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
@@ -144,6 +143,7 @@ def login():
 			return redirect(url_for('addtrans'))
 		else:
 			return render_template('login.html')
+	error=app.config['adminPassword']
 	return render_template('login.html', error=error)
 @app.route('/logout')
 def logout():
@@ -166,7 +166,7 @@ def newuser():
 		return render_template('adduser.html')
 	return redirect(url_for('login'))
 @app.route('/'+adminpanelURI, methods=['GET', 'POST'])
-def adminpanel():
+def admin():
 	if session.get('logged_in'):
 		if request.method == 'post':
 			if request.form['btn'] == 'add resource':
