@@ -2,7 +2,7 @@ from flask import Flask, request, redirect, url_for, session, render_templateh #
 import MySQLdb  # mysql library
 import keygen  # generate random 64 bits of entropy for the application secret key
 import hashlib  # hash for secure passwords. No salt
-import random  # 
+import random  # random secret key every run
 
 db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker") # initiates mysql connection
 app = Flask(__name__) # initiates flask webap
