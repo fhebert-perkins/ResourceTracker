@@ -1,9 +1,8 @@
 from flask import Flask, request, redirect, url_for, session, render_template # Web library requirements
 import MySQLdb  # mysql library
 import keygen  # generate random 64 bits of entropy for the application secret key
-import hashlib  # hash for secure passwords. No salt
 import random  # random secret key every run
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash # for salted passwords
 
 db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker") # initiates mysql connection
 app = Flask(__name__) # initiates flask webap
@@ -21,9 +20,19 @@ app.config.update(dict(
 
 )) # application configuration
 
-cur = db.cursor() # initiates database cursor
-cur.execute('SET autocommit=1;') # sets the database to autocommit changes
+def reconnect():
+	cur.close()
+	db.close()
+	db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker")
+	cur=db.cursor()
 
+
+cur = db.cursor() # initiates database cursor
+try:
+	cur.execute('SET autocommit=1;') # sets the database to autocommit changes
+except:
+	reconnect()
+	cur.execute('SET autocommit=1;')
 
 @app.route('/')
 def root():
@@ -39,19 +48,35 @@ def history():
 	if session.get('logged_in'): # checks if session is logged in if so passes to authorized only values
 		if request.method == 'POST': # if the request method is post
 			if request.form['serialNumber'] != '': # if serial number is present, use that to 
-				cur.execute('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber']) 
+				try:
+					cur.execute('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber']) 
+				except:
+					reconnect()
+					cur.execute('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber'])
 				data = cur.fetchall()
 				return render_template('history.html', data=data) # renders template with rows
 			elif request.form['loginName'] != '':
-				cur.execute('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
+				try:
+					cur.execute('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
+				except:
+					reconnect()
+					cur.execute('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
 				data = cur.fetchall()
 				return render_template('history.html', data=data)
 			elif request.form['resource'] != '':
-				cur.execute('SELECT * FROM Transactions WHERE LaptopModel=%s', request.form['resource'])
+				try:
+					cur.execute('SELECT * FROM Transactions WHERE LaptopModel=%s', request.form['resource'])
+				except:
+					reconnect()
+					cur.execute('SELECT * FROM Transactions WHERE LaptopModel=%s', request.form['resource'])
 				data = cur.fetchall()
 				return render_template('history.html', data=data)
 			elif request.form['transactionType'] != '':
-				cur.execute('SELECT * FROM Transactions WHERE TransType=%s', request.form['transactionType'])
+				try:
+					cur.execute('SELECT * FROM Transactions WHERE TransType=%s', request.form['transactionType'])
+				except:
+					reconnect()
+					cur.execute('SELECT * FROM Transactions WHERE TransType=%s', request.form['transactionType'])
 				data = cur.fetchall()
 				return render_template('history.html', data=data)
 			else:
@@ -62,21 +87,41 @@ def history():
 @app.route('/addtrans', methods=['POST','GET']) # adds transactions to the Transactions database
 def addtrans():
 	if session.get('logged_in'): # checks if logged in 
-		cur.execute('SELECT * FROM TransType')
+		try:
+			cur.execute('SELECT * FROM TransType')
+		except:
+			reconnect()
+			cur.execute('SELECT * FROM TransType')
 		types = cur.fetchall()
-		cur.execute('SELECT * FROM Resources')
+		try:
+			cur.execute('SELECT * FROM Resources')
+		except:
+			reconnect()
+			cur.execute('SELECT * FROM Resources')
 		resources = cur.fetchall()
 		if request.method == 'POST':
 			loginName = request.form['loginName']
 			serialNumber = request.form['serialNumber']
 			resource = request.form['resourceType']
-			cur.execute('SELECT Name FROM Resources WHERE RID='+resource)
+			try:
+				cur.execute('SELECT Name FROM Resources WHERE RID='+resource)
+			except:
+				reconnect()
+				cur.execute('SELECT Name FROM Resources WHERE RID='+resource)
 			resource = ''.join(cur.fetchall()[0])
 			transType = request.form['transtype']
-			cur.execute('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)
+			try:
+				cur.execute('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)
+			except:
+				reconnect()
+				cur.execute('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)
 			transType = ''.join(cur.fetchall()[0])
 			note = request.form['note']
-			cur.execute('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
+			try:
+				cur.execute('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
+			except:
+				reconnect()
+				cur.execute('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
@@ -88,7 +133,11 @@ def login():
 			if check_password_hash(app.config['adminPassword'], request.form['password']):
 				return redirect(url_for('adminpanel'))
 			return render_template('login.html', error='Wrong Username/password')
-		cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
+		try:
+			cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
+		except:
+			reconnect()
+			cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
 		hashed_password = cur.fetchall()[0]
 		if check_password_hash(hashed_password, request.form['password']):
 			session['logged_in'] = True
@@ -107,7 +156,12 @@ def newuser():
 	if session.get('logged_in'):
 		if request.method == 'post':
 			password = generate_password_hash(request.form['password'])
-			cur.execute('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
+			try:
+				cur.execute('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
+			except:
+				reconnect()
+				cur.execute('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
+
 			return render_template('adduser', updated=True)
 		return render_template('adduser.html')
 	return redirect(url_for('login'))
@@ -116,17 +170,22 @@ def adminpanel():
 	if session.get('logged_in'):
 		if request.method == 'post':
 			if request.form['btn'] == 'add resource':
-				cur.execute('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['reourceName'], request.form['resourceType']))
+				try:
+					cur.execute('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['reourceName'], request.form['resourceType']))
+				except:
+					reconnect()
+					cur.execute('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['reourceName'], request.form['resourceType']))
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
 			if request.form['btn'] == 'add transaction':
-				cur.execute('INSERT INTO Transactions (Transaction) VALUES (%s)', (request.form['transactionName']))
+				try:
+					cur.execute('INSERT INTO Transactions (Transaction) VALUES (%s)', (request.form['transactionName']))
+				except:
+					reconnect()
+					cur.execute('INSERT INTO Transactions (Transaction) VALUES (%s)', (request.form['transactionName']))
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
 		return render_template('adminpanel.html', adminURL=adminpanelURI)
 	return redirect(url_for('login'))
-@app.teardown_appcontext
-def teardown():
-	cur.close()
-	db.close()
+
 if __name__ == '__main__':
 	app.secret_key = app.config['app_secretKey']
 	app.run(debug=app.config['app_debug'], host='0.0.0.0', port=app.config['app_port'])
