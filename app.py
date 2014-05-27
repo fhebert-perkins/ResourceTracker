@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, session, render_templateh # Web library requirements
+from flask import Flask, request, redirect, url_for, session, render_template # Web library requirements
 import MySQLdb  # mysql library
 import keygen  # generate random 64 bits of entropy for the application secret key
 import hashlib  # hash for secure passwords. No salt
