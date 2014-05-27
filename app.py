@@ -109,7 +109,7 @@ def newuser():
 	return redirect(url_for('login'))
 @app.route('/'+adminpanelURI, methods=['GET', 'POST'])
 def adminpanel():
-	if session.get('logged_in')
+	if session.get('logged_in'):
 		if request.method == 'post':
 			if request.form['btn'] == 'add resource':
 				cur.execute('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['reourceName'], request.form['resourceType']))
