@@ -3,6 +3,7 @@ import MySQLdb  # mysql library
 import keygen  # generate random 64 bits of entropy for the application secret key
 import hashlib  # hash for secure passwords. No salt
 import random  # random secret key every run
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker") # initiates mysql connection
 app = Flask(__name__) # initiates flask webap
@@ -14,13 +15,15 @@ app.config.update(dict(
 	app_secretKey=keygen.key(),
 	app_debug=True,
 	app_port=5000,
-	adminPassword='d63dc919e201d7bc4c825630d2cf25fdc93d4b2f0d46706d29038d01',
+	app_hashKey='derpderpderp',
+	adminPassword=generate_password_hash('password')
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 
 )) # application configuration
 
 cur = db.cursor() # initiates database cursor
 cur.execute('SET autocommit=1;') # sets the database to autocommit changes
+
 
 @app.route('/')
 def root():
@@ -82,12 +85,12 @@ def login():
 	error = None
 	if request.method == 'POST':
 		if request.form['username'] == 'admin':
-			if hashlib.sha224(request.form['password']).hexdigest() == app.config['adminPassword']:
+			if check_password_hash(app.config['adminPassword'], request.form['password']):
 				return redirect(url_for('adminpanel'))
-			return render_template('login.html')
+			return render_template('login.html', error='Wrong Username/password')
 		cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
 		hashed_password = cur.fetchall()[0]
-		if hashed_password == hashlib.sha224(request.form['password']).hexdigest():
+		if check_password_hash(hashed_password, request.form['password']):
 			session['logged_in'] = True
 			return redirect(url_for('addtrans'))
 		else:
@@ -103,7 +106,7 @@ def logout():
 def newuser():
 	if session.get('logged_in'):
 		if request.method == 'post':
-			password = hashlib.sha224(request.form['password']).hexdigest()
+			password = generate_password_hash(request.form['password'])
 			cur.execute('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
 			return render_template('adduser', updated=True)
 		return render_template('adduser.html')
