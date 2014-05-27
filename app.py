@@ -84,9 +84,9 @@ def login():
 		if request.form['username'] == 'admin':
 			if hashlib.sha224(request.form['password']).hexdigest() == app.config['adminPassword']:
 				return redirect(url_for('adminpanel'))
-		cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['Username']))
+		cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
 		hashed_password = cur.fetchall()[0]
-		if hashed_password == hashlib.sha224(request.form['Password']).hexdigest():
+		if hashed_password == hashlib.sha224(request.form['password']).hexdigest():
 			session['logged_in'] = True
 			return redirect(url_for('addtrans'))
 		else:
