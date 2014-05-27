@@ -2,7 +2,6 @@ from flask import Flask, request, redirect, url_for, session, render_template # 
 import MySQLdb  # mysql library
 import keygen  # generate random 64 bits of entropy for the application secret key
 import random  # random secret key every run
-from werkzeug.security import generate_password_hash, check_password_hash # for salted passwords
 
 db = MySQLdb.connect(host="localhost", user="tracker", passwd="password", db="Tracker") # initiates mysql connection
 app = Flask(__name__) # initiates flask webap
@@ -129,7 +128,7 @@ def login():
 	error = None
 	if request.method == 'POST':
 		if request.form['username'] == 'admin':
-			if check_password_hash(get_hashed_password(app.config['adminPassword']), request.form['password']):
+			if request.form['password'] == app.cofig['password']:
 				return redirect(url_for('admin'))
 			return render_template('login.html', error='Wrong Username/password')
 		try:
@@ -138,12 +137,11 @@ def login():
 			reconnect()
 			cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
 		hashed_password = cur.fetchall()[0]
-		if check_password_hash(hashed_password, request.form['password']):
+		if hashed_password == request.form['password']:
 			session['logged_in'] = True
 			return redirect(url_for('addtrans'))
 		else:
 			return render_template('login.html')
-	error=app.config['adminPassword']
 	return render_template('login.html', error=error)
 @app.route('/logout')
 def logout():
