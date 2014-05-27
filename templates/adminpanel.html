@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<p>add resource type</p>
-	<form action='/'+{{ adminURL }} method='post'>
+	<form action='/{{ adminURL }}' method='post'>
 		<input type='text' name='resourceName' required>
 		<input type='text' name='resourceType' required>
 		<input type='submit' value='add resource' name='btn'>
 	</form>
 	<p>add transaction type</p>
-	<form action='/'+{{ adminURL }} method='post'>
+	<form action='/{{ adminURL }}' method='post'>
 		<input type='text' name='transactionName' required>
 		<input type='submit' value='add transaction' name='btn'>
 	</form>
