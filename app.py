@@ -85,8 +85,7 @@ def addtrans():
 			transType = ''.join(select('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)[0])
 			note = request.form['note']
 			query = 'INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)' % (loginName, serialNumber, resource, transType, note)
-			#insert(query)
-			flash(query)
+			insert(query)
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
