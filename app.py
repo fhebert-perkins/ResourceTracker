@@ -120,7 +120,7 @@ def newuser():
 	if session.get('logged_in'):
 		if request.method == 'POST':
 			password = generate_password_hash(request.form['password'])
-			insert('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)' % (request.form['username'], password))
+			insert('INSERT INTO Users (`Username`, `Password`) VALUES (\'%s\', \'%s\')' % (request.form['username'], password))
 			return render_template('adduser.html', updated=True)
 		return render_template('adduser.html')
 	return redirect(url_for('login'))
