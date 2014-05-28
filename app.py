@@ -57,16 +57,16 @@ def history():
 	if session.get('logged_in'): # checks if session is logged in if so passes to authorized only values
 		if request.method == 'POST': # if the request method is post
 			if request.form['serialNumber'] != '': # if serial number is present, use that to 
-				data = select('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber'])
+				data = select('SELECT * FROM Transactions WHERE SerialNumber=%s' % request.form['serialNumber'])
 				return render_template('history.html', data=data) # renders template with rows
 			elif request.form['loginName'] != '':	
-				data = select('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
+				data = select('SELECT * FROM Transactions WHERE LoginName=%s' % request.form['loginName'])
 				return render_template('history.html', data=data)
 			elif request.form['resource'] != '':				
-				data = select('SELECT * FROM Transactions WHERE LaptopModel=%s', request.form['resource'])
+				data = select('SELECT * FROM Transactions WHERE LaptopModel=%s'% request.form['resource'])
 				return render_template('history.html', data=data)
 			elif request.form['transactionType'] != '':
-				data = select('SELECT * FROM Transactions WHERE TransType=%s', request.form['transactionType'])
+				data = select('SELECT * FROM Transactions WHERE TransType=%s'% request.form['transactionType'])
 				return render_template('history.html', data=data)
 			else:
 				return render_template('history.html')
@@ -101,7 +101,7 @@ def login():
 			else:
 				return render_template('login.html', error='Incorrect Username/password')
 		else:	
-			hashed_password = str(select('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))[0][0])
+			hashed_password = str(select('SELECT Password FROM Users WHERE Username=%s' % (request.form['username']))[0][0])
 			if check_password_hash(hashed_password, request.form['password']):
 				session['logged_in'] = True
 				return redirect(url_for('addtrans'))
@@ -120,7 +120,7 @@ def newuser():
 	if session.get('logged_in'):
 		if request.method == 'POST':
 			password = generate_password_hash(request.form['password'])
-			insert('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
+			insert('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)' % (request.form['username'], password))
 			return render_template('adduser.html', updated=True)
 		return render_template('adduser.html')
 	return redirect(url_for('login'))
@@ -129,10 +129,10 @@ def admin():
 	if session.get('logged_in'):
 		if request.method == 'POST':
 			if request.form['btn'] == 'add resource':
-				insert('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['resourceName'], request.form['resourceType']))
+				insert('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)' %(request.form['resourceName'], request.form['resourceType']))
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
 			if request.form['btn'] == 'add transaction':	
-				insert('INSERT INTO Transactions (Transaction) VALUES (%s)', (request.form['transactionName']))
+				insert('INSERT INTO Transactions (Transaction) VALUES (%s)' % (request.form['transactionName']))
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
 		return render_template('adminpanel.html', adminURL=adminpanelURI)
 	return redirect(url_for('login'))
