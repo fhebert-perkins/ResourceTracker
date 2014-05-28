@@ -2,9 +2,17 @@
 {% block body %}
 	<p>add resource type</p>
 	<form action='/{{ adminURL }}' method='post'>
-		<input type='text' name='resourceName' required>
-		<input type='text' name='resourceType' required>
-		<input type='submit' value='add resource' name='btn'>
+		<table>
+			<tr>
+				<td>Resource Name</td>
+				<td>Resource Type</td>
+			</tr>
+			<tr>
+				<td><input type='text' name='resourceName' required></td>
+				<td><input type='text' name='resourceType' required></td>
+				<td><input type='submit' value='add resource' name='btn'></td>
+			</tr>
+		</table>
 	</form>
 	<p>add transaction type</p>
 	<form action='/{{ adminURL }}' method='post'>
