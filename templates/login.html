@@ -1,12 +1,13 @@
 {% extends 'template.html' %}
 {% block body %}
-		<form action="/login" method="post" id='LoginForm'>
-			<div id='Login Box' style='background-color:#273470;height:160px;width:250px; position: absolute; left:390px;top:110px; border:3px solid black;' align='center'>
-			<div id='Username'><br><b><em>Username: </em></b> <input type='text' name='username' autofocus required></div>
-			<div id='Password'><br><b><em>Password: </em></b> <input type="password" name="password" required></div>
-			<button type='submit' value='Submit' form='LoginForm'>Login</button>  
-			</div> 
+	<div id='loginbox'>
+		<form action="/login" method="post">
+			Username: <input type='text' name='username' autofocus required>
+			<br><br>
+			Password: <input type="password" name="password" required>
+			<br><br>
+			<button type='submit' value='Submit' class="btn btn-default">Login</button>  
 		</form>
-	</body>
-</html>
+	</div>
+	<p style=''>
 {% endblock %}

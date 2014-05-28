@@ -93,21 +93,23 @@ def addtrans():
 @app.route('/login', methods=['POST','GET'])
 def login():
 	error = None
-	if request.method == 'POST':
-		if request.form['username'] == 'admin':
-			if check_password_hash(app.config['adminPassword'], request.form['password']):
-				session['logged_in'] = True
-				return redirect(url_for('admin'))
-			else:
-				return render_template('login.html', error='Incorrect Username/password')
-		else:	
-			hashed_password = str(select('SELECT Password FROM Users WHERE Username=\'%s\'' % (request.form['username']))[0][0])
-			if check_password_hash(hashed_password, request.form['password']):
-				session['logged_in'] = True
-				return redirect(url_for('addtrans'))
-			else:
-				return render_template('login.html', error=hashed_password)
-	return render_template('login.html', error=error)
+	if not session.get('logged_in'):
+		if request.method == 'POST':
+			if request.form['username'] == 'admin':
+				if check_password_hash(app.config['adminPassword'], request.form['password']):
+					session['logged_in'] = True
+					return redirect(url_for('admin'))
+				else:
+					return render_template('login.html', error='Incorrect Username/password')
+			else:	
+				hashed_password = str(select('SELECT Password FROM Users WHERE Username=\'%s\'' % (request.form['username']))[0][0])
+				if check_password_hash(hashed_password, request.form['password']):
+					session['logged_in'] = True
+					return redirect(url_for('addtrans'))
+				else:
+					return render_template('login.html', error=hashed_password)
+		return render_template('login.html', error=error)
+	return redirect(url_for('addtrans'))
 @app.route('/logout')
 def logout():
 	print session.get('logged_in')
@@ -126,7 +128,7 @@ def newuser():
 	return redirect(url_for('login'))
 @app.route('/'+adminpanelURI, methods=['GET', 'POST'])
 def admin():
-	if session.get('logged_in'):
+	if session.get('logged_in') == True:
 		if request.method == 'POST':
 			if request.form['btn'] == 'add resource':
 				insert('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)' %(request.form['resourceName'], request.form['resourceType']))
