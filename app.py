@@ -101,7 +101,7 @@ def login():
 			else:
 				return render_template('login.html', error='Incorrect Username/password')
 		else:	
-			hashed_password = str(select('SELECT Password FROM Users WHERE Username=%s' % (request.form['username']))[0][0])
+			hashed_password = str(select('SELECT Password FROM Users WHERE Username=\'%s\'' % (request.form['username']))[0][0])
 			if check_password_hash(hashed_password, request.form['password']):
 				session['logged_in'] = True
 				return redirect(url_for('addtrans'))
