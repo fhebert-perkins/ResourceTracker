@@ -25,6 +25,7 @@ app.config.update(dict(
 )) # application configuratio
 
 def select(query):
+	flash(query) #debug
 	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
 	cur = db.cursor()
 	cur.execute(query)
@@ -33,6 +34,7 @@ def select(query):
 	db.close()
 	return toreturn
 def insert(query):
+	flash(query) #debug
 	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
 	cur = db.cursor()
 	cur.execute(query)
