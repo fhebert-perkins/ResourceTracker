@@ -39,7 +39,19 @@ def root():
 @app.route('/search')
 def search():
 	if session.get('logged_in'): # checks if session is logged in, if so passes search form
-		return render_template('search.html') # serves search form
+		try:
+			cur.execute('SELECT * FROM TransType')
+		except:
+			db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
+			cur.execute('SELECT * FROM TransType')
+		types = cur.fetchall()
+		try:
+			cur.execute('SELECT * FROM Resources')
+		except:
+			db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
+			cur.execute('SELECT * FROM Resources')
+		resources = cur.fetchall()
+		return render_template('search.html', transtypes=types, resourcetype=resources) # serves search form
 	return redirect(url_for('login')) # redirects to login if user is not logged in
 
 @app.route('/history', methods=['GET','POST']) # request methods allowed Post and Get

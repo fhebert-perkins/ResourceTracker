@@ -1,5 +1,6 @@
 {% extends 'template.html' %}
 {% block body %}
+<center>
 <form action='/history' method='post'>
 	s/n: <input type='text' name='serialNumber' required>
 		Login Name: <input type='text' name='loginName'>
@@ -16,4 +17,5 @@
 		Note: <input type='text' name='note'>
 		<input type='submit' value='Search'>
 </form>
+</center>
 {% endblock %}
