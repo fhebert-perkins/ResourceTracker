@@ -140,7 +140,7 @@ def login():
 			except:
 				db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
 				cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
-			hashed_password = str(cur.fetchall()[0])
+			hashed_password = str(cur.fetchall()[0][0])
 			if check_password_hash(hashed_password, request.form['password']):
 				session['logged_in'] = True
 				return redirect(url_for('addtrans'))
