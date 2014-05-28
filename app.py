@@ -86,7 +86,7 @@ def addtrans():
 			note = request.form['note']
 			query = 'INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)' % (loginName, serialNumber, resource, transType, note)
 			flash(query)
-			#insert(query)
+			insert(query)
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
