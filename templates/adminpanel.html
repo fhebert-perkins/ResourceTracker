@@ -1,6 +1,18 @@
 {% extends 'template.html' %}
 {% block body %}
-	<p>add resource type</p>
+	<form action='/{{ adminURL }}' method='post'>
+		<table>
+			<tr>
+				<td>Username</td>
+				<td>Password</td>
+			</tr>
+			<tr>
+				<td><input type='text' name='username' required></td>
+				<td><input type='text' name='password' required></td>
+				<td><input type='submit' value='create user' name='btn'></td>
+			</tr>
+		</table>
+	</form>
 	<form action='/{{ adminURL }}' method='post'>
 		<table>
 			<tr>
@@ -14,9 +26,15 @@
 			</tr>
 		</table>
 	</form>
-	<p>add transaction type</p>
 	<form action='/{{ adminURL }}' method='post'>
-		<input type='text' name='transactionName' required>
-		<input type='submit' value='add transaction' name='btn'>
+		<table>
+			<tr>
+				<td>Transaction Name</td>
+			</tr>
+			<tr>
+				<td><input type='text' name='transactionName' required></td>
+				<td><input type='submit' value='add transaction' name='btn'></td>
+			</tr>
+		</table>
 	</form>
 {% endblock %}

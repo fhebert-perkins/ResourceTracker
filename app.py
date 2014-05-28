@@ -21,7 +21,7 @@ app.config.update(dict(
 	sql_user='tracker',
 	sql_password='password',
 	sql_db='Tracker',
-	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
+	#SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 )) # application configuratio
 
 def select(query):
@@ -121,8 +121,7 @@ def logout():
 def newuser():
 	if session.get('logged_in'):
 		if request.method == 'POST':
-			password = generate_password_hash(request.form['password'])
-			insert('INSERT INTO Users (`Username`, `Password`) VALUES (\'%s\', \'%s\')' % (request.form['username'], password))
+			
 			return render_template('adduser.html', updated=True)
 		return render_template('adduser.html')
 	return redirect(url_for('login'))
@@ -132,10 +131,17 @@ def admin():
 		if request.method == 'POST':
 			if request.form['btn'] == 'add resource':
 				insert('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)' %(request.form['resourceName'], request.form['resourceType']))
+				flash('New resource '+request.form['resourceName']+' added')
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
 			if request.form['btn'] == 'add transaction':	
 				insert('INSERT INTO Transactions (Transaction) VALUES (%s)' % (request.form['transactionName']))
+				flash('New transaction '+reques.form['transactionName']+' added')
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
+			if request.form['btn'] == 'create user':
+				password = generate_password_hash(request.form['password'])
+				insert('INSERT INTO Users (`Username`, `Password`) VALUES (\'%s\', \'%s\')' % (request.form['username'], password))
+				flash('New user "'+request.form['username']+'" added')
+				return render_template('adminpanel.html', adminpanel=adminpanelURI)
 		return render_template('adminpanel.html', adminURL=adminpanelURI)
 	return redirect(url_for('login'))
 @app.route('/favicon.ico')
