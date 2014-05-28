@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+{% extends 'template.html' %}
+{% block body %}
 	{% if updated %}
 		<p>User Added</p>
 	{% endif %}
@@ -8,4 +8,4 @@
 		<input type='password' name='password'><br>
 		<input type='submit' value='Submit'>
 	</form>
-</html>
+{% endblock %}

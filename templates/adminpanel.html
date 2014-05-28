@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+{% extends 'template.html' %}
+{% block body %}
 	<p>add resource type</p>
 	<form action='/{{ adminURL }}' method='post'>
 		<input type='text' name='resourceName' required>
@@ -11,4 +11,4 @@
 		<input type='text' name='transactionName' required>
 		<input type='submit' value='add transaction' name='btn'>
 	</form>
-</html>
+{% endblock %}
