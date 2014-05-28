@@ -21,17 +21,22 @@ app.config.update(dict(
 	sql_password='password',
 	sql_db='Tracker',
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
-)) # application configuration
+)) # application configuratio
 
-db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-cur = db.cursor() # initiates database cursor
-try:
-	cur.execute('SET autocommit=1;') # sets the database to autocommit changes
-except:
-	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-	cur.execute('SET autocommit=1;')
-
-
+def select(query):
+	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
+	cur = db.cursor()
+	cur.execute(query)
+	toreturn=cur.fetchall()
+	cur.close()
+	db.close()
+	return toreturn
+def insert(query):
+	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
+	cur = db.cursor()
+	cur.execute('query')
+	cur.close()
+	db.close()
 
 @app.route('/')
 def root():
@@ -39,19 +44,9 @@ def root():
 @app.route('/search')
 def search():
 	if session.get('logged_in'): # checks if session is logged in, if so passes search form
-		try:
-			cur.execute('SELECT * FROM TransType')
-		except:
-			db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-			cur.execute('SELECT * FROM TransType')
-		types = cur.fetchall()
-		try:
-			cur.execute('SELECT * FROM Resources')
-		except:
-			db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-			cur.execute('SELECT * FROM Resources')
-		resources = cur.fetchall()
-		return render_template('search.html', transtypes=types, resourcetype=resources) # serves search form
+		types= select('SELECT * FROM Transactions')
+		resources = select('SELECT * FROM Resources')
+		return render_template('search.html', transtypes=types, resourcetype=resource) # serves search form
 	return redirect(url_for('login')) # redirects to login if user is not logged in
 
 @app.route('/history', methods=['GET','POST']) # request methods allowed Post and Get
@@ -59,36 +54,16 @@ def history():
 	if session.get('logged_in'): # checks if session is logged in if so passes to authorized only values
 		if request.method == 'POST': # if the request method is post
 			if request.form['serialNumber'] != '': # if serial number is present, use that to 
-				try:
-					cur.execute('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber']) 
-				except:
-					db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-					cur.execute('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber'])
-				data = cur.fetchall()
+				data = select('SELECT * FROM Transactions WHERE SerialNumber=%s', request.form['serialNumber'])
 				return render_template('history.html', data=data) # renders template with rows
-			elif request.form['loginName'] != '':
-				try:
-					cur.execute('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
-				except:
-					db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-					cur.execute('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
-				data = cur.fetchall()
+			elif request.form['loginName'] != '':	
+				data = select('SELECT * FROM Transactions WHERE LoginName=%s', request.form['loginName'])
 				return render_template('history.html', data=data)
-			elif request.form['resource'] != '':
-				try:
-					cur.execute('SELECT * FROM Transactions WHERE LaptopModel=%s', request.form['resource'])
-				except:
-					db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-					cur.execute('SELECT * FROM Transactions WHERE LaptopModel=%s', request.form['resource'])
-				data = cur.fetchall()
+			elif request.form['resource'] != '':				
+				data = select('SELECT * FROM Transactions WHERE LaptopModel=%s', request.form['resource'])
 				return render_template('history.html', data=data)
 			elif request.form['transactionType'] != '':
-				try:
-					cur.execute('SELECT * FROM Transactions WHERE TransType=%s', request.form['transactionType'])
-				except:
-					db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-					cur.execute('SELECT * FROM Transactions WHERE TransType=%s', request.form['transactionType'])
-				data = cur.fetchall()
+				data = select('SELECT * FROM Transactions WHERE TransType=%s', request.form['transactionType'])
 				return render_template('history.html', data=data)
 			else:
 				return render_template('history.html')
@@ -98,41 +73,17 @@ def history():
 @app.route('/addtrans', methods=['POST','GET']) # adds transactions to the Transactions database
 def addtrans():
 	if session.get('logged_in'): # checks if logged in 
-		try:
-			cur.execute('SELECT * FROM TransType')
-		except:
-			db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-			cur.execute('SELECT * FROM TransType')
-		types = cur.fetchall()
-		try:
-			cur.execute('SELECT * FROM Resources')
-		except:
-			db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-			cur.execute('SELECT * FROM Resources')
-		resources = cur.fetchall()
+		types = select('SELECT * FROM TransType')
+		resources = select('SELECT * FROM Resources')
 		if request.method == 'POST':
 			loginName = request.form['loginName']
 			serialNumber = request.form['serialNumber']
 			resource = request.form['resourceType']
-			try:
-				cur.execute('SELECT Name FROM Resources WHERE RID='+resource)
-			except:
-				db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-				cur.execute('SELECT Name FROM Resources WHERE RID='+resource)
-			resource = ''.join(cur.fetchall()[0])
+			resource = ''.join(select('SELECT Name FROM Resources WHERE RID='+resource)[0])
 			transType = request.form['transtype']
-			try:
-				cur.execute('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)
-			except:
-				db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-				cur.execute('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)
-			transType = ''.join(cur.fetchall()[0])
+			transType = ''.join(select('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)[0])
 			note = request.form['note']
-			try:
-				cur.execute('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
-			except:
-				db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-				cur.execute('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
+			insert('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
@@ -146,13 +97,8 @@ def login():
 				return redirect(url_for('admin'))
 			else:
 				return render_template('login.html', error='Incorrect Username/password')
-		else:
-			try:
-				cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
-			except:
-				db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-				cur.execute('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))
-			hashed_password = str(cur.fetchall()[0][0])
+		else:	
+			hashed_password = str(select('SELECT Password FROM Users WHERE Username=%s', (request.form['username']))[0][0])
 			if check_password_hash(hashed_password, request.form['password']):
 				session['logged_in'] = True
 				return redirect(url_for('addtrans'))
@@ -171,12 +117,7 @@ def newuser():
 	if session.get('logged_in'):
 		if request.method == 'POST':
 			password = generate_password_hash(request.form['password'])
-			try:
-				cur.execute('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
-			except:
-				db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-				cur.execute('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
-
+			insert('INSERT INTO Users (`Username`, `Password`) VALUES (%s, %s)', (request.form['username'], password))
 			return render_template('adduser.html', updated=True)
 		return render_template('adduser.html')
 	return redirect(url_for('login'))
@@ -185,18 +126,10 @@ def admin():
 	if session.get('logged_in'):
 		if request.method == 'POST':
 			if request.form['btn'] == 'add resource':
-				try:
-					cur.execute('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['resourceName'], request.form['resourceType']))
-				except:
-					db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-					cur.execute('INSERT INTO Resources (`Name`, `Type`) VALUES (%s, %s)', (request.form['resourceName'], request.form['resourceType']))
+				insert('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)', (request.form['resourceName'], request.form['resourceType']))
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
-			if request.form['btn'] == 'add transaction':
-				try:
-					cur.execute('INSERT INTO Transactions (Transaction) VALUES (%s)', (request.form['transactionName']))
-				except:
-					db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
-					cur.execute('INSERT INTO Transactions (Transaction) VALUES (%s)', (request.form['transactionName']))
+			if request.form['btn'] == 'add transaction':	
+				insert('INSERT INTO Transactions (Transaction) VALUES (%s)', (request.form['transactionName']))
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
 		return render_template('adminpanel.html', adminURL=adminpanelURI)
 	return redirect(url_for('login'))
