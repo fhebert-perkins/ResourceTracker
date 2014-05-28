@@ -3,6 +3,7 @@ import MySQLdb  # mysql library
 import keygen  # generate random 64 bits of entropy for the application secret key
 import random  # random secret key every run
 from werkzeug.security import generate_password_hash, check_password_hash # for salted passwords
+import os
 
 
 app = Flask(__name__) # initiates flask webap
@@ -83,7 +84,7 @@ def addtrans():
 			transType = request.form['transtype']
 			transType = ''.join(select('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)[0])
 			note = request.form['note']
-			insert('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note))
+			insert(('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note)))
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
