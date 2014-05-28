@@ -16,8 +16,8 @@ KEY
 ```
 | ! | task | language |
 | ------------- | ----------- | ----------- |
-| ! | database handlers and queries | sql & python |
-| ! | template for login page | html |
+| ~~!~~ | ~~database handlers and queries~~ | ~~sql & python~~ |
+| ~~!~~ | ~~template for login page~~ | ~~html~~ |
 | ~~!~~ | ~~template for root page~~ | ~~html~~ |
 | ~~!~~ | ~~template for info page~~ | ~~html~~ | 
 | * | css to make things pretty | css |
