@@ -19,7 +19,7 @@ app.config.update(dict(
 	sql_host='localhost',
 	sql_user='tracker',
 	sql_password='password',
-	sql_db='Tracker'
+	sql_db='Tracker',
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 )) # application configuration
 
