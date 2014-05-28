@@ -20,7 +20,7 @@ app.config.update(dict(
 	sql_user='tracker',
 	sql_password='password',
 	sql_db='Tracker'
-	#SESSION_COOKIE_DOMAIN='localhost'
+	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 )) # application configuration
 
 db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db']) # initiates mysql connection
