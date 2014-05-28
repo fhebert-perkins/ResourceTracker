@@ -1,4 +1,4 @@
-Reasource tracker
+Resource tracker
 =================
 
 Tracks items based on assigned unique ids preferably physically attached to the object
