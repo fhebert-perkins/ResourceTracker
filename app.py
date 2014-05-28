@@ -34,7 +34,7 @@ def select(query):
 def insert(query):
 	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
 	cur = db.cursor()
-	cur.execute('query')
+	cur.execute(query)
 	cur.close()
 	db.close()
 
