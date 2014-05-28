@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, session, render_template, send_from_directory # Web library requirements
+from flask import Flask, request, redirect, url_for, session, render_template, send_from_directory, flash # Web library requirements
 import MySQLdb  # mysql library
 import keygen  # generate random 64 bits of entropy for the application secret key
 import random  # random secret key every run
@@ -85,7 +85,8 @@ def addtrans():
 			transType = ''.join(select('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)[0])
 			note = request.form['note']
 			query = 'INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)', (loginName, serialNumber, resource, transType, note)
-			insert(query)
+			#insert(query)
+			flash(query)
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
