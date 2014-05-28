@@ -47,7 +47,7 @@ def root():
 @app.route('/search')
 def search():
 	if session.get('logged_in'): # checks if session is logged in, if so passes search form
-		types= select('SELECT * FROM Transactions')
+		types = select('SELECT * FROM TransType')
 		resources = select('SELECT * FROM Resources')
 		return render_template('search.html', transtypes=types, resourcetype=resources) # serves search form
 	return redirect(url_for('login')) # redirects to login if user is not logged in
