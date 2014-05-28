@@ -70,7 +70,7 @@ def history():
 				return render_template('history.html', data=data)
 			else:
 				return render_template('history.html')
-		return redirect(url_for('serach'))
+		return redirect(url_for('search'))
 	return redirect(url_for('login'))
 
 @app.route('/addtrans', methods=['POST','GET']) # adds transactions to the Transactions database
