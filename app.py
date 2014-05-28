@@ -86,7 +86,7 @@ def addtrans():
 			transType = request.form['transtype']
 			transType = ''.join(select('SELECT TransTypeDesc FROM TransType WHERE TransOrder='+transType)[0])
 			note = request.form['note']
-			insert('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (%s, %s, %s, %s, %s)' % (loginName, serialNumber, resource, transType, note))
+			insert('INSERT INTO `Transactions` (LoginName, SerialNumber, LaptopModel, TransType, `Notes`) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')' % (loginName, serialNumber, resource, transType, note))
 			return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 		return render_template('addtrans.html', transtypes=types, resourcetype=resources)
 	return redirect(url_for('login'))
@@ -102,8 +102,7 @@ def login():
 				else:
 					return render_template('login.html', error='Incorrect Username/password')
 			else:	
-				hashed_password = select('SELECT Password FROM Users WHERE Username=\'%s\'' %request.form['username'])
-				flash(hashed_password)
+				hashed_password = select('SELECT Password FROM Users WHERE Username=\'%s\'' %request.form['username'])[0][0]
 				if check_password_hash(hashed_password, request.form['password']):
 					session['logged_in'] = True
 					return redirect(url_for('addtrans'))
