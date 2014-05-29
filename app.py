@@ -16,9 +16,9 @@ app.config.update(dict(
 	app_port=5000,
 	app_hashKey='derpderpderp',
 	adminPassword=generate_password_hash('password'),
-	sql_host='10.0.27.175',
-	sql_user='root',
-	sql_password='TB36#imp',
+	sql_host='localhost',
+	sql_user='tracker',
+	sql_password='password',
 	sql_db='Tracker',
 	adminpanelURI=''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)),
 	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
