@@ -7,7 +7,6 @@ import os
 
 
 app = Flask(__name__) # initiates flask webap
-adminpanelURI=''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)) # url for the admin panel
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
 	USERNAME='admin',
@@ -21,9 +20,9 @@ app.config.update(dict(
 	sql_user='root',
 	sql_password='TB36#imp',
 	sql_db='Tracker',
+	adminpanelURI=''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)),
 	#SESSION_COOKIE_DOMAIN='coleyarbrough.com'
-)) # application configuratio
-
+))
 def select(query):
 	flash(query) #debug
 	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
@@ -40,7 +39,6 @@ def insert(query):
 	cur.execute(query)
 	cur.close()
 	db.close()
-
 @app.route('/')
 def root():
 	return redirect(url_for('addtrans')) # if / is served, redirects webbrowser to the add transaction page
@@ -131,24 +129,24 @@ def newuser():
 			return render_template('adduser.html', updated=True)
 		return render_template('adduser.html')
 	return redirect(url_for('login'))
-@app.route('/'+adminpanelURI, methods=['GET', 'POST'])
+@app.route('/'+app.config['adminpanelURI'], methods=['GET', 'POST'])
 def admin():
 	if session.get('logged_in') == True:
 		if request.method == 'POST':
 			if request.form['btn'] == 'add resource':
 				insert('INSERT INTO Resources (`Name`, `Type`) VALUES (\'%s\', \'%s\')' %(request.form['resourceName'], request.form['resourceType']))
 				flash('New resource '+request.form['resourceName']+' added')
-				return render_template('adminpanel.html', adminURL=adminpanelURI)
+				return render_template('adminpanel.html', adminURL=app.config['adminpanelURI'])
 			if request.form['btn'] == 'add transaction':	
-				insert('INSERT INTO Transactions (Transaction) VALUES (\'%s\')' % (request.form['transactionName']))
+				insert('INSERT INTO Transactions (Transaction) VALUES (\'%s\')' % request.form['transactionName'])
 				flash('New transaction '+reques.form['transactionName']+' added')
-				return render_template('adminpanel.html', adminURL=adminpanelURI)
+				return render_template('adminpanel.html', adminURL=app.config['adminpanelURI'])
 			if request.form['btn'] == 'create user':
 				password = generate_password_hash(request.form['password'])
-				insert('INSERT INTO Users (`Username`, `Password`) VALUES (\'%s\', \'%s\')' % (request.form['username'], password))
+				insert('INSERT INTO Users (`Username`, `Password`) VALUES (\'%s\', \'%s\');' % (request.form['username'], password))
 				flash('New user "'+request.form['username']+'" added')
-				return render_template('adminpanel.html', adminpanel=adminpanelURI)
-		return render_template('adminpanel.html', adminURL=adminpanelURI)
+				return render_template('adminpanel.html', adminpanel=app.config['adminpanelURI'])
+		return render_template('adminpanel.html', adminURL=app.config['adminpanelURI'])
 	return redirect(url_for('login'))
 @app.route('/favicon.ico')
 def favicon():
