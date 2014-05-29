@@ -21,7 +21,7 @@ app.config.update(dict(
 	sql_user='tracker',
 	sql_password='password',
 	sql_db='Tracker',
-	#SESSION_COOKIE_DOMAIN='coleyarbrough.com'
+	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 )) # application configuratio
 
 def select(query):
@@ -60,13 +60,13 @@ def history():
 				data = select('SELECT * FROM Transactions WHERE SerialNumber=\'%s\'' % request.form['serialNumber'])
 				return render_template('history.html', data=data) # renders template with rows
 			elif request.form['loginName'] != '':	
-				data = select('SELECT * FROM Transactions WHERE LoginName=%s' % request.form['loginName'])
+				data = select('SELECT * FROM Transactions WHERE LoginName=\'%s\'' % request.form['loginName'])
 				return render_template('history.html', data=data)
 			elif request.form['resource'] != '':				
-				data = select('SELECT * FROM Transactions WHERE LaptopModel=%s'% request.form['resource'])
+				data = select('SELECT * FROM Transactions WHERE LaptopModel=\'%s\'' % request.form['resource'])
 				return render_template('history.html', data=data)
 			elif request.form['transactionType'] != '':
-				data = select('SELECT * FROM Transactions WHERE TransType=%s'% request.form['transactionType'])
+				data = select('SELECT * FROM Transactions WHERE TransType=\'%s\'' % request.form['transactionType'])
 				return render_template('history.html', data=data)
 			else:
 				return render_template('history.html')
@@ -102,7 +102,7 @@ def login():
 				else:
 					return render_template('login.html', error='Incorrect Username/password')
 			else:	
-				hashed_password = select('SELECT Password FROM Users WHERE Username=\'%s\'' %request.form['username'])
+				hashed_password = ''.join(select('SELECT Password FROM Users WHERE Username=\'%s\'' %request.form['username'])[0])
 				if check_password_hash(hashed_password, request.form['password']):
 					session['logged_in'] = True
 					return redirect(url_for('addtrans'))
