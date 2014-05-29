@@ -30,7 +30,7 @@ USE `Tracker`;
 
 DROP TABLE IF EXISTS `Resources`;
 CREATE TABLE IF NOT EXISTS `Resources` (
-  `RID` int(11) NOT NULL,
+  `RID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) NOT NULL,
   `Type` varchar(50) NOT NULL,
   UNIQUE KEY `RID` (`RID`)
@@ -78,7 +78,7 @@ DROP TABLE IF EXISTS `Users`;
 CREATE TABLE IF NOT EXISTS `Users` (
   `UID` int(11) NOT NULL AUTO_INCREMENT,
   `Username` varchar(50) NOT NULL,
-  `Password` varchar(50) NOT NULL,
+  `Password` varchar(100) NOT NULL,
   PRIMARY KEY (`UID`),
   KEY `UID` (`UID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;

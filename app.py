@@ -17,11 +17,11 @@ app.config.update(dict(
 	app_port=5000,
 	app_hashKey='derpderpderp',
 	adminPassword=generate_password_hash('password'),
-	sql_host='localhost',
-	sql_user='tracker',
-	sql_password='password',
+	sql_host='10.0.27.175',
+	sql_user='root',
+	sql_password='TB36#imp',
 	sql_db='Tracker',
-	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
+	#SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 )) # application configuratio
 
 def select(query):
@@ -100,15 +100,21 @@ def login():
 					session['logged_in'] = True
 					return redirect(url_for('admin'))
 				else:
-					return render_template('login.html', error='Incorrect Username/password')
-			else:	
-				hashed_password = ''.join(select('SELECT Password FROM Users WHERE Username=\'%s\'' %request.form['username'])[0])
-				if check_password_hash(hashed_password, request.form['password']):
-					session['logged_in'] = True
-					return redirect(url_for('addtrans'))
-				else:
-					return render_template('login.html', error=hashed_password)
-		return render_template('login.html', error=error)
+					flash('Incorrect Username/password')
+					return render_template('login.html')
+			else:
+				try:
+					hashed_password = ''.join(select('SELECT Password FROM Users WHERE Username=\'%s\'' %request.form['username'])[0])
+					if check_password_hash(hashed_password, request.form['password']):
+						session['logged_in'] = True
+						return redirect(url_for('addtrans'))
+					else:
+						flash(hashed_password)
+						return render_template('login.html')
+				except:
+					flash('no such username')
+					return render_template('login.html')
+		return render_template('login.html')
 	return redirect(url_for('addtrans'))
 @app.route('/logout')
 def logout():
@@ -130,11 +136,11 @@ def admin():
 	if session.get('logged_in') == True:
 		if request.method == 'POST':
 			if request.form['btn'] == 'add resource':
-				insert('INSERT INTO Resources (`ResourceName`, `ResourceType`) VALUES (%s, %s)' %(request.form['resourceName'], request.form['resourceType']))
+				insert('INSERT INTO Resources (`Name`, `Type`) VALUES (\'%s\', \'%s\')' %(request.form['resourceName'], request.form['resourceType']))
 				flash('New resource '+request.form['resourceName']+' added')
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
 			if request.form['btn'] == 'add transaction':	
-				insert('INSERT INTO Transactions (Transaction) VALUES (%s)' % (request.form['transactionName']))
+				insert('INSERT INTO Transactions (Transaction) VALUES (\'%s\')' % (request.form['transactionName']))
 				flash('New transaction '+reques.form['transactionName']+' added')
 				return render_template('adminpanel.html', adminURL=adminpanelURI)
 			if request.form['btn'] == 'create user':
