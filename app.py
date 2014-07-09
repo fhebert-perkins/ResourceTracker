@@ -20,7 +20,7 @@ app.config.update(dict(
 	sql_password='password',
 	sql_db='Tracker',
 	adminpanelURI=''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)),
-	SESSION_COOKIE_DOMAIN='localhost'
+	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
 ))
 def select(query):
 	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
