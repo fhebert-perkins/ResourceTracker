@@ -33,10 +33,10 @@ def select(query):
 def insert(query):
 	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
 	cur = db.cursor()
-	cur.execute(query+';commit;')
-	cur.execute()
-	cur.close()
-	db.close()
+	cur.execute(query+';commit;')# executes the insert command with trainling commit because fuck you mysql
+	cur.execute()# executes query
+	cur.close() # cleanly exits the connection
+	db.close() # closes the server
 @app.route('/')
 def root():
 	return redirect(url_for('addtrans')) # if / is served, redirects webbrowser to the add transaction page
@@ -111,7 +111,7 @@ def login():
 					flash('no such username')
 					return render_template('login.html')
 		return render_template('login.html')
-	return redirect(url_for('addtrans'))"TB36#imp"
+	return redirect(url_for('addtrans'))
 @app.route('/logout')
 def logout():
 	print session.get('logged_in')
