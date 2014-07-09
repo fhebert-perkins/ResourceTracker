@@ -5,7 +5,6 @@ import random  # random secret key every run
 from werkzeug.security import generate_password_hash, check_password_hash # for salted passwords
 import os
 
-
 app = Flask(__name__) # initiates flask webap
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
@@ -14,14 +13,14 @@ app.config.update(dict(
 	app_secretKey=keygen.key(),
 	app_debug=True,
 	app_port=5000,
-	app_hashKey='derpderpderp',
+	app_hashKey="".join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)),
 	adminPassword=generate_password_hash('password'),
 	sql_host='localhost',
 	sql_user='tracker',
 	sql_password='password',
 	sql_db='Tracker',
 	adminpanelURI=''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890') for _ in range(10)),
-	SESSION_COOKIE_DOMAIN='coleyarbrough.com'
+	SESSION_COOKIE_DOMAIN='localhost'
 ))
 def select(query):
 	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
@@ -34,8 +33,8 @@ def select(query):
 def insert(query):
 	db = MySQLdb.connect(host=app.config['sql_host'], user=app.config['sql_user'], passwd=app.config['sql_password'], db=app.config['sql_db'])
 	cur = db.cursor()
-	cur.execute(query)
-	cur.execute('commit;')
+	cur.execute(query+';commit;')
+	cur.execute()
 	cur.close()
 	db.close()
 @app.route('/')
@@ -112,7 +111,7 @@ def login():
 					flash('no such username')
 					return render_template('login.html')
 		return render_template('login.html')
-	return redirect(url_for('addtrans'))
+	return redirect(url_for('addtrans'))"TB36#imp"
 @app.route('/logout')
 def logout():
 	print session.get('logged_in')
