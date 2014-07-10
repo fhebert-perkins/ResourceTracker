@@ -28,7 +28,7 @@
   </div>
 {% endif %}
   {% for message in get_flashed_messages() %}
-    <div class=flash>{{ message }}</div>
+    <div class="flash alert alert-sucess alert-dismissable">{{ message }}</div>
   {% endfor %}
   {% block body %}{% endblock %}
   <div class="footer">

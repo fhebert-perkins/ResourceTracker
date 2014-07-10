@@ -52,16 +52,16 @@ def history():
 	if session.get('logged_in'): # checks if session is logged in if so passes to authorized only values
 		if request.method == 'POST': # if the request method is post
 			if request.form['serialNumber'] != '': # if serial number is present, use that to 
-				data = select('SELECT * FROM Transactions WHERE SerialNumber LIKE \'%s\'' % request.form['serialNumber'])
+				data = select('SELECT * FROM Transactions WHERE SerialNumber LIKE \'%s%\'' % request.form['serialNumber'])
 				return render_template('history.html', data=data) # renders template with rows
 			elif request.form['loginName'] != '':	
-				data = select('SELECT * FROM Transactions WHERE LoginName LIKE \'%s\'' % request.form['loginName'])
+				data = select('SELECT * FROM Transactions WHERE LoginName LIKE \'%s%\'' % request.form['loginName'])
 				return render_template('history.html', data=data)
 			elif request.form['resource'] != '':				
-				data = select('SELECT * FROM Transactions WHERE LaptopModel LIKE \'%s\'' % request.form['resource'])
+				data = select('SELECT * FROM Transactions WHERE LaptopModel LIKE \'%s%\'' % request.form['resource'])
 				return render_template('history.html', data=data)
 			elif request.form['transactionType'] != '':
-				data = select('SELECT * FROM Transactions WHERE TransType LIKE \'%s\'' % request.form['transactionType'])
+				data = select('SELECT * FROM Transactions WHERE TransType LIKE \'%s%\'' % request.form['transactionType'])
 				return render_template('history.html', data=data)
 			else:
 				return render_template('history.html')
