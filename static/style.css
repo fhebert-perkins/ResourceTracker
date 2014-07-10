@@ -17,4 +17,9 @@
 	text-align: center;
 	font-family: monospace;
 	color: #8D8D8D;
+	height: 100px;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	
 }
