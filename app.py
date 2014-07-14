@@ -4,8 +4,9 @@ import keygen  # generate random 64 bits of entropy for the application secret k
 import random  # random secret key every run
 from werkzeug.security import generate_password_hash, check_password_hash # for salted passwords
 import os
+import time
 
-app = Flask(__name__) # initiates flask webap
+app = Flask(__name__) # initiates flask webapp
 #app.config.from_pyfile('config.py')
 app.config.update(dict(
 	USERNAME='admin',
@@ -36,6 +37,10 @@ def insert(query):
 	cur.execute(query+';commit;')# executes the insert command with trainling commit because fuck you mysql
 	cur.close() # cleanly exits the connection
 	db.close() # closes the server
+def log(string):
+	logfile = open("log.txt","a")
+	logfile.write(string)
+	logfile.close()
 @app.route('/')
 def root():
 	return redirect(url_for('addtrans')) # if / is served, redirects webbrowser to the add transaction page
@@ -52,16 +57,16 @@ def history():
 	if session.get('logged_in'): # checks if session is logged in if so passes to authorized only values
 		if request.method == 'POST': # if the request method is post
 			if request.form['serialNumber'] != '': # if serial number is present, use that to 
-				data = select('SELECT * FROM Transactions WHERE SerialNumber LIKE \'%s\%\'' % request.form['serialNumber'])
+				data = select('SELECT * FROM Transactions WHERE SerialNumber LIKE \''+request.form['serialNumber']+'%\'')
 				return render_template('history.html', data=data) # renders template with rows
 			elif request.form['loginName'] != '':	
-				data = select('SELECT * FROM Transactions WHERE LoginName LIKE \'%s\%\'' % request.form['loginName'])
+				data = select('SELECT * FROM Transactions WHERE LoginName LIKE \''+request.form['loginName']+'%\'')
 				return render_template('history.html', data=data)
 			elif request.form['resource'] != '':				
-				data = select('SELECT * FROM Transactions WHERE LaptopModel LIKE \'%s\%\'' % request.form['resource'])
+				data = select('SELECT * FROM Transactions WHERE LaptopModel LIKE \''+request.form['resource']+'%\'')
 				return render_template('history.html', data=data)
 			elif request.form['transactionType'] != '':
-				data = select('SELECT * FROM Transactions WHERE TransType LIKE \'%s\%\'' % request.form['transactionType'])
+				data = select('SELECT * FROM Transactions WHERE TransType LIKE \''+request.form['transactionType']'%\'')
 				return render_template('history.html', data=data)
 			else:
 				return render_template('history.html')
@@ -93,15 +98,17 @@ def login():
 			if request.form['username'] == 'admin':
 				if check_password_hash(app.config['adminPassword'], request.form['password']):
 					session['logged_in'] = True
+					log("admin logged in" + time.time())
 					return redirect(url_for('admin'))
 				else:
 					flash('Incorrect Username/password')
 					return render_template('login.html')
 			else:
 				try:
-					hashed_password = ''.join(select('SELECT Password FROM Users WHERE Username=\'%s\'' %request.form['username'])[0])
+					hashed_password = ''.join(select('SELECT Password FROM Users WHERE Username=\'%s\'' % request.form['username'])[0])
 					if check_password_hash(hashed_password, request.form['password']):
 						session['logged_in'] = True
+						log(request.form['username']+" logged in "+str(time.time()))
 						return redirect(url_for('addtrans'))
 					else:
 						flash(hashed_password)
@@ -122,7 +129,6 @@ def logout():
 def newuser():
 	if session.get('logged_in'):
 		if request.method == 'POST':
-			
 			return render_template('adduser.html', updated=True)
 		return render_template('adduser.html')
 	return redirect(url_for('login'))
