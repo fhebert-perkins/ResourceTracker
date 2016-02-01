@@ -1,19 +1,19 @@
 {% extends 'template.html' %}
 {% block body %}
-	<center><form method='post' action='/addtrans'>
-		s/n: <input type='text' name='serialNumber' required>
-		Login Name: <input type='text' name='loginName'>
-		<select name='resourceType'>
-			{% for row in resourcetype %}
-				<option value='{{ row[0] }}'>{{ row[1] }}</option>
-			{% endfor %}
-		</select>
-		<select name='transtype'>
-			{% for row in transtypes %}
-				<option value='{{ row[0] }}'>{{ row[1] }}</option>
-			{% endfor %}
-		</select>
-		Note: <input type='text' name='note'>
-		<input type='submit' value='new transaction'>
-	</form></center>
+<center><form method='post' action='/addtrans'>
+    s/n: <input type='text' name='serialNumber' required>
+    Login Name: <input type='text' name='loginName'>
+    <select name='resourceType'>
+        {% for row in resourcetype %}
+            <option value='{{ row[0] }}'>{{ row[1] }}</option>
+        {% endfor %}
+    </select>
+    <select name='transtype'>
+        {% for row in transtypes %}
+            <option value='{{ row[0] }}'>{{ row[1] }}</option>
+        {% endfor %}
+    </select>
+    Note: <input type='text' name='note'>
+    <input type='submit' value='new transaction'>
+</form></center>
 {% endblock %}
