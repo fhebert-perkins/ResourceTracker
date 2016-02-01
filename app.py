@@ -1,8 +1,11 @@
 from flask import Flask, request, redirect, url_for, session, render_template, send_from_directory, flash # Web library requirements
 import os
 import time
+from models import db, bcrypt, User, Transaction, TransactionType
 
 app = Flask(__name__) # initiates flask webapp
+db.init(app)
+bcrypt.init(app)
 
 @app.route('/')
 def root():
@@ -10,28 +13,32 @@ def root():
 
 @app.route('/search')
 def search():
-    pass
+    return "NYI"
 
 @app.route('/history', methods=['GET','POST']) # request methods allowed Post and Get
 def history():
-    if session.get('logged_in'): # checks if session is logged in if so passes to authorized only values
-        if request.method == 'POST': # if the request method is post
-            return render_template('history.html')
-       return redirect(url_for('search'))
-return redirect(url_for('login'))
+    return "NYI"
 
 @app.route('/addtrans', methods=['POST','GET']) # adds transactions to the Transactions database
 def addtrans():
-    return render_template('addtrans.html', transtypes=types, resourcetype=resources)
-    return redirect(url_for('login'))
+    return "NYI"
 
 @app.route('/login', methods=['POST','GET'])
 def login():
 	error = None
 	if not session.get('logged_in'):
         if request.method == "POST":
-
-            return redirect(url_for("addtrans"))
+            try:
+                user = User.query.filter_by(email=request.form["email"]).first()
+            except:
+                flash("Incorrect Username or Password")
+                return render_template('login.html')
+            if user.login(request.form["password"]):
+                session["logged_in"] = True
+                return redirect(url_for("addtrans"))
+            else:
+                flash("Incorrect Username or Password")
+                return render_template('login.html')
         else:
             return render_template('login.html')
     return redirect(url_for('addtrans'))
@@ -45,17 +52,15 @@ def logout():
 
 @app.route('/newuser', methods=['GET', 'POST'])
 def newuser():
-    if session.get('logged_in'):
-        if request.method == 'POST':
-            return render_template('adduser.html', updated=True)
-        return render_template('adduser.html')
-    return redirect(url_for('login'))
+    return "NYI"
+
+@app.route("/users")
+def listusers():
+    return "NYI"
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    if session.get('logged_in') == True:
-        return render_template('adminpanel.html', adminURL=app.config['adminpanelURI'])
-    return redirect(url_for('login'))
+    return "NYI"
 
 @app.route('/favicon.ico')
 def favicon():

@@ -10,11 +10,13 @@ class User(db.Model):
     email       = db.Column(db.String(255), unique=True)
     password    = db.Column(db.String(40))
     isAdmin     = db.Column(db.Boolean)
+    pwChange    = db.Column(db.Boolean)
 
     def __init__(self, email, password, isAdmin=False):
         self.email      = email
         self.password   = bcrypt.generate_password_hash(password)
         self.isAdmin    = isAdmin
+        self.pwChange   = True
 
     def login(self, password):
         return bcrypt.check_password_hash(self.password, password)
