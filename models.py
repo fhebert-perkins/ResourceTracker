@@ -18,7 +18,7 @@ class User(db.Model):
 
     def login(self, password):
         return bcrypt.check_password_hash(self.password, password)
-        
+
     def __repr__(self):
         return "<User %r>" % self.email
 
@@ -47,4 +47,4 @@ class TransactionType(db.Model):
     name        = db.Column(db.String(40))
 
     def __init__(self, name):
-        self.name       = name
+        self.name = name

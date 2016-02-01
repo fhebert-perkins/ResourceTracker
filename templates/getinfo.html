@@ -1,57 +1,5 @@
 {% extends 'template.html' %}
 {% block body %}
-    <style type="text/css">
-    body{
-        font-family: monospace;
-    }
-    #top{
-        width: 650px;
-        border-bottom: solid 1px black;
-        padding-left: 30px;
-    }
-    #inputs{
-        width: 50;
-    }
-    div#top td{
-        text-align: right;
-    }
-    #bottom td{
-        text-align: right;
-    }
-    #history{
-        border: solid 2px black;
-        height: 100px;
-        width: 650px;
-        text-align: center;
-        display: block;
-    }
-    #history td#name{
-        border-right: solid 1px black;
-        height: 15px;
-        width: 165px;
-        text-align: center;
-    }
-    #history td#serial{
-        border-right: solid 1px black;
-        height: 15px;
-        width: 165px;
-        text-align: center;
-    }
-    #history td#date{
-        border-right: solid 1px black;
-        height: 15px;
-        width: 165px;
-        text-align: center;
-    }
-    #history td#action{
-        height: 15px;
-        width: 165px;
-        text-align: center;
-    }
-    #history tr{
-        width: 625px;
-    }
-    </style>
     <form action='/getinfo' method='post'>
         <div id='top'>
             <table>
@@ -65,7 +13,7 @@
                             <tr>
                                 <td>case#: <input type='text' name='Casenum'></td>
                                 <td>Last Name: <input type='date' name='Date'></td>
-                                
+
                             </tr>
                         </table>
                     </td>
