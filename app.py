@@ -9,7 +9,7 @@ def root():
     return redirect(url_for('addtrans')) # if / is served, redirects webbrowser to the add transaction page
 @app.route('/search')
 def search():
-
+    pass
 @app.route('/history', methods=['GET','POST']) # request methods allowed Post and Get
 def history():
     if session.get('logged_in'): # checks if session is logged in if so passes to authorized only values
@@ -20,37 +20,41 @@ return redirect(url_for('login'))
 
 @app.route('/addtrans', methods=['POST','GET']) # adds transactions to the Transactions database
 def addtrans():
-	return render_template('addtrans.html', transtypes=types, resourcetype=resources)
-	return redirect(url_for('login'))
+    return render_template('addtrans.html', transtypes=types, resourcetype=resources)
+    return redirect(url_for('login'))
+
 @app.route('/login', methods=['POST','GET'])
 def login():
 	error = None
 	if not session.get('logged_in'):
-			return render_template('login.html')
-	return redirect(url_for('addtrans'))
-@app.route('/logout')
+        if request.method == "POST":
+
+            return redirect(url_for("addtrans"))
+        else:
+            return render_template('login.html')
+    return redirect(url_for('addtrans'))
+@app.route('/logout') # This can stay the same
 def logout():
-	print session.get('logged_in')
-	if session.get('logged_in'):
-		session.pop('logged_in', None)
-		return redirect(url_for('login'))
-	return redirect(url_for('login'))
+    if session.get('logged_in'):
+        session.pop('logged_in', None)
+        return redirect(url_for('login'))
+    return redirect(url_for('login'))
 @app.route('/newuser', methods=['GET', 'POST'])
 def newuser():
-	if session.get('logged_in'):
-		if request.method == 'POST':
-			return render_template('adduser.html', updated=True)
-		return render_template('adduser.html')
-	return redirect(url_for('login'))
+    if session.get('logged_in'):
+        if request.method == 'POST':
+            return render_template('adduser.html', updated=True)
+        return render_template('adduser.html')
+    return redirect(url_for('login'))
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-	if session.get('logged_in') == True:
-		return render_template('adminpanel.html', adminURL=app.config['adminpanelURI'])
-	return redirect(url_for('login'))
+    if session.get('logged_in') == True:
+        return render_template('adminpanel.html', adminURL=app.config['adminpanelURI'])
+    return redirect(url_for('login'))
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
-	app.secret_key = app.config['app_secretKey']
-	app.run(debug=app.config['app_debug'], host='0.0.0.0', port=app.config['app_port'])
+    app.secret_key = app.config['app_secretKey']
+    app.run(debug=app.config['app_debug'], host='0.0.0.0', port=app.config['app_port'])
