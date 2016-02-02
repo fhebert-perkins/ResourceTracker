@@ -3,10 +3,10 @@
 <form method='post' action='/addtrans' class="center">
     <table>
         <tr>
-            <td>S/N</td>
-            <td>User</td>
-            <td>Model</td>
-            <td>State</td>
+            <td>S/N <span class="hint" title="Serial Number">?</span></td>
+            <td>User <span class="hint" title="The person that the object\nis assigned to">?</span></td>
+            <td>Model <span class="hint" title="What is the object">?</span></td>
+            <td>State <span class="hint" title="What is happening to the object">?</span></td>
             <td>Note</td>
         </tr>
         <tr>
@@ -20,8 +20,8 @@
                 </select>
             </td>
             <td>
-                <select name='transtype'>
-                    {% for row in transtypes %}
+                <select name='transType'>
+                    {% for row in transTypes %}
                         <option value='{{ row[0] }}'>{{ row[1] }}</option>
                     {% endfor %}
                 </select>

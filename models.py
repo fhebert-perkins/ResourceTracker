@@ -27,14 +27,16 @@ class User(db.Model):
 class Transaction(db.Model):
     id          = db.Column(db.Integer, primary_key=True) # transaction id
     owner       = db.Column(db.String(128))
+    user        = db.Column(db.String(128))
     serial      = db.Column(db.String(128))
     model       = db.Column(db.String(128))
     transtype   = db.Column(db.Integer)
     date        = db.Column(db.DateTime)
     notes       = db.Column(db.Text)
 
-    def __init__(self, owner, serial, model, transtype, notes):
+    def __init__(self, owner, user, serial, model, transtype, notes):
         self.owner      = owner
+        self.user       = user
         self.serial     = serial
         self.model      = model
         self.transtype  = transtype

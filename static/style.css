@@ -12,6 +12,15 @@ a {
     text-align: -webkit-center;
 }
 
+.hint {
+    color: #7F7F7F;
+}
+.hint:hover {
+    color: #666666;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 th {
     min-width: 100px;
 }

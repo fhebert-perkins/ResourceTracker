@@ -58,6 +58,23 @@ def history():
 @app.route('/addtrans', methods=['POST','GET']) # adds transactions to the Transactions database
 @login_required
 def addtrans():
+    if request.method == "POST":
+        serialNumber= request.form["serialNumber"]
+        user        = request.form["loginName"]
+        models      = request.form["resourceType"]
+        transtype   = request.form["transType"]
+        note        = request.form["notes"]
+        transaction = Transaction(owner=user,
+                                user=session.get("email"),
+                                serial=serialNumber,
+                                model=model,
+                                transtype=transtype,
+                                notes=note)
+        db.session.add(transaction)
+        db.session.commit()
+        flash("Transaction added")
+    else:
+        pass
     return render_template("addtrans.html")
 
 @app.route('/login', methods=['POST','GET'])
@@ -88,7 +105,7 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/newuser', methods=['GET', 'POST'])
-#@admin_required
+@admin_required
 def newuser():
     return "NYI"
 
@@ -98,7 +115,7 @@ def listusers():
     return "NYI"
 
 @app.route('/admin', methods=['GET', 'POST'])
-#@admin_required
+@admin_required
 def admin():
     return "NYI"
 
