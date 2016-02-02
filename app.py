@@ -47,11 +47,12 @@ def search():
 @app.route("/settings")
 @login_required
 def settings():
-    return "NYI"
+    return render_template("settings.html")
 
 @app.route('/history', methods=['GET','POST']) # request methods allowed Post and Get
 @login_required
 def history():
+    return "NYI"
     items = Transaction.query.all().order_by("date")
     return render_template("history.html", entries=items)
 

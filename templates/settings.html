@@ -4,29 +4,27 @@
     <table>
         <tr>
             <td>
-                <form action='/settings' method='post'>
+                <form action='{{ url_for("settings") }}' method='post'>
                     <table>
                         <tr>
-                            <td>Resource Name</td>
-                            <td>Resource Type</td>
+                            <td>Model</td>
                         </tr>
                         <tr>
                             <td><input type='text' name='resourceName' required></td>
-                            <td><input type='text' name='resourceType' required></td>
-                            <td><input type='submit' value='add resource' name='btn'></td>
+                            <td><input type='submit' value='Add Model'></td>
                         </tr>
                     </table>
                 </form>
             </td>
-            <td>
-                <form action='/{{ adminURL }}' method='post'>
+            <td style="display:inline-block; margin-left:30px;">
+                <form action='{{ url_for("settings") }}' method='post'>
                     <table>
                         <tr>
-                            <td>Transaction Name</td>
+                            <td>State Name</td>
                         </tr>
                         <tr>
-                            <td><input type='text' name='transactionName' required></td>
-                            <td><input type='submit' value='add transaction' name='btn'></td>
+                            <td><input type='text' name='state' required></td>
+                            <td><input type='submit' value='Add State'></td>
                         </tr>
                     </table>
                 </form>
