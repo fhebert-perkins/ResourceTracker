@@ -2,10 +2,11 @@ from flask import Flask, request, redirect, url_for, session, render_template, s
 import os
 import time
 from models import db, bcrypt, User, Transaction, TransactionType
+from functools import wraps
 
 app = Flask(__name__) # initiates flask webapp
-db.init(app)
-bcrypt.init(app)
+db.init_app(app)
+bcrypt.init_app(app)
 
 def login_required(f):
     @wraps(f)
@@ -18,7 +19,7 @@ def login_required(f):
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not User.query.filter_by(email=session.get("email")).first().admin:
+        if not User.query.filter_by(email=session.get("email")).first().isAdmin:
             abort(405)
         elif session.get("logged_in") is None:
             return redirect(url_for('login', next=request.url))
@@ -46,8 +47,8 @@ def addtrans():
 
 @app.route('/login', methods=['POST','GET'])
 def login():
-	error = None
-	if not session.get('logged_in'):
+    error = None
+    if not session.get('logged_in'):
         if request.method == "POST":
             try:
                 user = User.query.filter_by(email=request.form["email"]).first() # get user that is
@@ -56,10 +57,10 @@ def login():
                 session["email"] = user.email
                 return redirect(url_for("addtrans"))
             except:
-                flash("Incorrect Username or Password")
-                return render_template('login.html')
+                error = "Incorrect Username or Password"
+                return render_template('login.html', error=error)
         else:
-            return render_template('login.html')
+            return render_template('login.html', error=error)
     return redirect(url_for('addtrans'))
 
 @app.route('/logout') # This can stay the same
@@ -90,5 +91,5 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
-    app.secret_key = os.urandom(16).encode("base_64")
+    app.secret_key = os.urandom(16)
     app.run(debug=True)
