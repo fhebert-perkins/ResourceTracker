@@ -1,6 +1,6 @@
+from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
-from datetime import datetime
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()

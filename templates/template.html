@@ -6,13 +6,13 @@
 <body>
     <table width="100%">
         <tr>
-            <td>
-                <center>
-                    <a href="{{ url_for('history') }}">History</a> |
-                    <a href="{{ url_for('addtrans') }}">New</a> |
-                    <a href="{{ url_for('history') }}">Search</a> |
-                    <a href="{{ url_for('logout') }}">Logout</a>
-                </center>
+            <td class="center">
+                {% if session.get("logged_in") %}
+                <a href="{{ url_for('history') }}">History</a> |
+                <a href="{{ url_for('addtrans') }}">New</a> |
+                <a href="{{ url_for('history') }}">Search</a>
+                | <a href="{{ url_for('logout') }}">Logout</a>
+                {% endif %}
             </td>
         </tr>
         <tr>
@@ -25,7 +25,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td style="display:block;margin-top:50px;margin-bottom:50px;">
                 {% block body %}{% endblock %}
             </td>
         </tr>

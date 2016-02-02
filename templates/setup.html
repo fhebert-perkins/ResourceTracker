@@ -1,0 +1,25 @@
+{% extends 'template.html' %}
+{% block body %}
+    <form action='/setup' method='post' class="center">
+        <h3>Setup (Add administrator)</h3>
+        <table>
+            <tr>
+                <td>Email</td>
+                <td><input type='text' name='email'><td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type='password' name='password'></td>
+            <tr>
+            <tr>
+                <td>Password Again</td>
+                <td><input type="password" name="passwordAgain"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type='submit' value='Finish Setup'></td>
+
+            </tr>
+        </table>
+    </form>
+{% endblock %}

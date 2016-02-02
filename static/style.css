@@ -1,74 +1,13 @@
-#loginbox{
-    border: 1px solid black;
-    border-radius: 15px;
-    width: 300px;
-    height: 150px;
-    padding: 15px;
-    background-color: #273470;
-    margin:0 auto;
-    margin-top: 200px;
-    vertical-align: middle;
-    text-align: center;
+input[type=text], input[type=password] {
+    border : 1px black solid;
+    height: 20px;
+    padding-left: 2px;
 }
-#loginbutton{
-    width:100px;
+
+a {
+    text-decoration: none;
 }
-.footer{
-    text-align: center;
-    font-family: monospace;
-    color: #8D8D8D;
-    height: 100px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-}
-body{
-    font-family: monospace;
-}
-#top{
-    width: 650px;
-    border-bottom: solid 1px black;
-    padding-left: 30px;
-}
-#inputs{
-    width: 50;
-}
-div#top td{
-    text-align: right;
-}
-#bottom td{
-    text-align: right;
-}
-#history{
-    border: solid 2px black;
-    height: 100px;
-    width: 650px;
-    text-align: center;
-    display: block;
-}
-#history td#name{
-    border-right: solid 1px black;
-    height: 15px;
-    width: 165px;
-    text-align: center;
-}
-#history td#serial{
-    border-right: solid 1px black;
-    height: 15px;
-    width: 165px;
-    text-align: center;
-}
-#history td#date{
-    border-right: solid 1px black;
-    height: 15px;
-    width: 165px;
-    text-align: center;
-}
-#history td#action{
-    height: 15px;
-    width: 165px;
-    text-align: center;
-}
-#history tr{
-    width: 625px;
+
+.center {
+    text-align: -webkit-center;
 }
