@@ -11,3 +11,7 @@ a {
 .center {
     text-align: -webkit-center;
 }
+
+th {
+    min-width: 100px;
+}

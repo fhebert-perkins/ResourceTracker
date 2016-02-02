@@ -1,33 +1,29 @@
 {% extends 'template.html' %}
 {% block body %}
-<center>
-    <div class="alert alert-warning" role="alert">Not Yet Implemented</div>
-    <style type="text/css">
-    table {
-        width:600px;
-    }
-    th, td {
-        width:100px;
-        display: inline-block;
-    }
-    </style>
+<div class="center">
     <table>
         <tr>
-            <th>s/n</th>
-            <th>Login Name<th>
-            <th>type</th>
-            <th>Date</th>
+            <th>S/N</th>
+            <th>User<th>
+            <th>Model</th>
             <th>Action</th>
+            <th>Date</th>
+            <th>Notes</th>
         <tr>
+
         {% for entry in entries %}
         <tr>
-            <td>{{ entry[0] }}</td>
-            <td>{{ entry[1] }}</td>
-            <td>{{ entry[2] }}</td>
-            <td>{{ entry[3] }}</td>
-            <td>{{ entry[4] }}</td>
+            <td>{{ entry.serial }}</td>
+            <td>{{ entry.owner }}</td>
+            <td>{{ entry.model }}</td>
+            <td>{{ entry.transtype}}</td>
+            <td>{{ entry.date }}</td>
+            <td>{{ entry.notes }}</td>
         </tr>
         {% endfor %}
     </table>
-</center>
+        {% if entries == [] %}
+            <h3>No Transactions</h3>
+        {% endif %}
+</div>
 {% endblock %}

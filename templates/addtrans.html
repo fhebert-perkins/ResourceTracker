@@ -1,19 +1,42 @@
 {% extends 'template.html' %}
 {% block body %}
-<center><form method='post' action='/addtrans'>
-    s/n: <input type='text' name='serialNumber' required>
-    Login Name: <input type='text' name='loginName'>
-    <select name='resourceType'>
-        {% for row in resourcetype %}
-            <option value='{{ row[0] }}'>{{ row[1] }}</option>
-        {% endfor %}
-    </select>
-    <select name='transtype'>
-        {% for row in transtypes %}
-            <option value='{{ row[0] }}'>{{ row[1] }}</option>
-        {% endfor %}
-    </select>
-    Note: <input type='text' name='note'>
-    <input type='submit' value='new transaction'>
+<form method='post' action='/addtrans' class="center">
+    <table>
+        <tr>
+            <td>S/N</td>
+            <td>User</td>
+            <td>Model</td>
+            <td>State</td>
+            <td>Note</td>
+        </tr>
+        <tr>
+            <td><input type='text' name='serialNumber' required></td>
+            <td><input type='text' name='loginName'></td>
+            <td>
+                <select name='resourceType'>
+                    {% for row in resourcetype %}
+                        <option value='{{ row[0] }}'>{{ row[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <select name='transtype'>
+                    {% for row in transtypes %}
+                        <option value='{{ row[0] }}'>{{ row[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <input type='text' name='note'>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td><a href='{{ url_for("settings") }}'>add</a></td>
+            <td><a href='{{ url_for("settings") }}'>add</a></td>
+        </tr>
+    </table>
+    <input type='submit' value='Submit'>
 </form></center>
 {% endblock %}

@@ -44,15 +44,21 @@ def root():
 def search():
     return "NYI"
 
+@app.route("/settings")
+@login_required
+def settings():
+    return "NYI"
+
 @app.route('/history', methods=['GET','POST']) # request methods allowed Post and Get
 @login_required
 def history():
-    return "NYI"
+    items = Transaction.query.all().order_by("date")
+    return render_template("history.html", entries=items)
 
 @app.route('/addtrans', methods=['POST','GET']) # adds transactions to the Transactions database
 @login_required
 def addtrans():
-    return "NYI"
+    return render_template("addtrans.html")
 
 @app.route('/login', methods=['POST','GET'])
 def login():
