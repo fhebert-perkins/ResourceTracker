@@ -6,7 +6,7 @@
 <body>
     <table width="100%">
         <tr>
-            <td class="center">
+            <td class="center navBar">
                 {% if session.get("logged_in") %}
                 <a href="{{ url_for('history') }}">History</a> |
                 <a href="{{ url_for('addtrans') }}">New</a> |

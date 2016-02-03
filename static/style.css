@@ -3,11 +3,6 @@ input[type=text], input[type=password] {
     height: 20px;
     padding-left: 2px;
 }
-
-a {
-    text-decoration: none;
-}
-
 .center {
     text-align: -webkit-center;
 }
@@ -19,6 +14,19 @@ a {
     color: #666666;
     font-weight: bold;
     cursor: pointer;
+}
+
+.navBar a {
+    color:blue;
+    text-decoration: none;
+}
+
+.navBar a:hover {
+    color:black;
+}
+
+.navBar a:visited{
+    color:blue;
 }
 
 th {
