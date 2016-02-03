@@ -52,3 +52,23 @@ class TransactionType(db.Model):
 
     def __init__(self, name):
         self.name = name
+
+class ModelName(db.Model):
+    id          = db.Column(db.Integer, primary_key=True)
+    name       = db.Column(db.String(15))
+
+    def __init__(self, model):
+        self.name = model
+
+    def __repr__(self):
+        return "<Model %r>" % self.title
+
+class StateName(db.Model):
+    id          = db.Column(db.Integer, primary_key=True)
+    name        = db.Column(db.String(15))
+
+    def __init__(self, state):
+        self.name = state
+
+    def __repr__(self):
+        return "<State %r>" % self.name

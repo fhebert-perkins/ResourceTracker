@@ -1,6 +1,6 @@
 {% extends 'template.html' %}
 {% block body %}
-<form method='post' action='/addtrans' class="center">
+<form method='post' action='{{ url_for("addtrans") }}' class="center">
     <table>
         <tr>
             <td>S/N <span class="hint" title="Serial Number">?</span></td>
@@ -15,14 +15,14 @@
             <td>
                 <select name='resourceType'>
                     {% for row in resourcetype %}
-                        <option value='{{ row[0] }}'>{{ row[1] }}</option>
+                        <option value='{{ row.name }}'>{{ row.name }}</option>
                     {% endfor %}
                 </select>
             </td>
             <td>
                 <select name='transType'>
                     {% for row in transTypes %}
-                        <option value='{{ row[0] }}'>{{ row[1] }}</option>
+                        <option value='{{ row.name }}'>{{ row.name }}</option>
                     {% endfor %}
                 </select>
             </td>

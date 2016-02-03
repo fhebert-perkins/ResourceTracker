@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, url_for, session, render_template, send_from_directory, flash # Web library requirements
 import os
 import time
-from models import db, bcrypt, User, Transaction, TransactionType
+from models import db, bcrypt, User, Transaction, TransactionType, StateName, ModelName
 from functools import wraps
 
 app = Flask(__name__) # initiates flask webapp
@@ -44,9 +44,21 @@ def root():
 def search():
     return "NYI"
 
-@app.route("/settings")
+@app.route("/settings", methods=["POST", "GET"])
 @login_required
 def settings():
+    if request.method == "POST":
+        if request.form["submit"] == "Add Model":
+            obj = ModelName(model=request.form["resourceName"])
+            db.session.add(obj)
+            db.session.commit()
+            flash("Object Added")
+        else:
+            state = StateName(state=request.form["state"])
+            db.session.add(state)
+            db.session.commit()
+            flash("State Added")
+
     return render_template("settings.html")
 
 @app.route('/history', methods=['GET','POST']) # request methods allowed Post and Get
@@ -62,12 +74,12 @@ def addtrans():
     if request.method == "POST":
         serialNumber= request.form["serialNumber"]
         user        = request.form["loginName"]
-        models      = request.form["resourceType"]
+        model      = request.form["resourceType"]
         transtype   = request.form["transType"]
-        note        = request.form["notes"]
+        note        = request.form["note"]
         transaction = Transaction(owner=user,
-                                user=session.get("email"),
                                 serial=serialNumber,
+                                user=session.get("email"),
                                 model=model,
                                 transtype=transtype,
                                 notes=note)
@@ -76,22 +88,26 @@ def addtrans():
         flash("Transaction added")
     else:
         pass
-    return render_template("addtrans.html")
+    states = StateName.query.all()
+    objects = ModelName.query.all()
+    return render_template("addtrans.html", resourcetype=objects, transTypes=states)
 
 @app.route('/login', methods=['POST','GET'])
 def login():
     error = None
     if not session.get('logged_in'):
         if request.method == "POST":
-            try:
-                user = User.query.filter_by(email=request.form["email"]).first() # get user that is
-                assert user.login(request.form["password"])
-                session["logged_in"] = True
-                session["email"] = user.email
-                return redirect(url_for("addtrans"))
-            except AssertionError:
-                error = "Incorrect Username or Password"
-                return render_template('login.html', error=error)
+            return str(User.query.all())
+            # try:
+            #
+            #     user = User.query.filter_by(email=request.form["email"]).first() # get user that is
+            #     assert user.login(request.form["password"])
+            #     session["logged_in"] = True
+            #     session["email"] = user.email
+            #     return redirect(url_for("addtrans"))
+            # except AssertionError:
+            #     error = "Incorrect Username or Password"
+            #    return render_template('login.html', error=error)
         else:
             return render_template('login.html', error=error)
     else:
@@ -130,10 +146,13 @@ def setup():
         abort(404)
     elif request.method == "POST":
         if request.form["password"] == request.form["passwordAgain"]:
-            user = User(email=request.form["email"], password=request.form["password"], isAdmin=True)
+            user = User(email=request.form["email"],
+                        password=request.form["password"],
+                        isAdmin=True
+                    )
             db.session.add(user)
             db.session.commit()
-            return redirect(url_for("login"))
+            return redirect(url_for("root"))
         else:
             flash("Passwords do not match")
             return render_template("setup.html")
@@ -144,5 +163,5 @@ def setup():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.secret_key = os.urandom(16)
+    app.secret_key = "test"#os.urandom(16)
     app.run(debug=True)
